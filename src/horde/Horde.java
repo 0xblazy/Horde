@@ -5,7 +5,6 @@
  */
 package horde;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
