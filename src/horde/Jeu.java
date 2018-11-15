@@ -16,8 +16,6 @@ public class Jeu {
         
         Horde horde = new Horde(2);
         
-        System.out.println("Génération de la carte...");
-        
         horde.init();
         
         horde.afficherCarte();

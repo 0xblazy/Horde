@@ -30,6 +30,8 @@ public class Horde {
     }
     
     public void init() {
+        System.out.println("Génération de la carte...");
+        
         Random ra = new Random();
         int planchesRestantes = this.MAX_PLANCHES;
         int metalRestant = this.MAX_METAL;

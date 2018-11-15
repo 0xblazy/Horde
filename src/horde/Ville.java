@@ -27,6 +27,20 @@ public class Ville extends Case {
         this.porteOuverte = false;
     }
     
+    public boolean ouvrirPorte() {
+        if(this.porteOuverte) {
+            System.out.println("La porte est déjà ouverte !!!");
+            return false;
+        } else {
+            this.porteOuverte = true;
+            return true;
+        }
+    }
+    
+    public boolean porteOuverte(){
+        return this.porteOuverte;
+    }
+    
     public String affichageSimple() {
         return "   VILLE   ";
     }
