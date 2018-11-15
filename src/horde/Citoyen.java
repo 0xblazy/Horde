@@ -160,13 +160,22 @@ public class Citoyen {
 
     /* Retourne le Citoyen sous la forme Nom (PV, PA) [x, y] */
     public String toString() {
-        String s = this.nom + "(" + this.pv + " PV, " + this.pa + "PA)";
+        String s = this.nom + " (" + this.pv + " PV, " + this.pa + " PA)";
 
         if (this.enVille) {
-            s += " [En ville]";
+            s += " [En ville]\n";
         } else {
-            s += " [" + this.x + "," + this.y + "]";
+            s += " [" + this.x + "," + this.y + "]\n";
         }
+        
+        s += "  Inventaire (" + (this.nbPlanche + this.nbMetal + this.nbBoisson 
+                + this.nbGourde + this.nbRation) + "/" + this.TAILLE_SAC 
+                + "):\n";
+        s += "    - Planches de bois : " + this.nbPlanche + "\n";
+        s += "    - Plaques de métal : " + this.nbMetal + "\n";
+        s += "    - Boissons énergisantes : " + this.nbBoisson + "\n";
+        s += "    - Gourdes : " + this.nbGourde + "\n";
+        s += "    - Rations : " + this.nbRation + "\n";
 
         return s;
     }

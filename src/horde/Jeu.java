@@ -19,6 +19,8 @@ public class Jeu {
         horde.init();
         
         horde.afficherCarte();
+        System.out.println(horde.getCitoyenAtI(0));
+        System.out.println(horde.getCitoyenAtI(1));
         
     }
     
