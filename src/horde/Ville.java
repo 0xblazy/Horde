@@ -5,17 +5,18 @@
  */
 package horde;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author nK_BlaZy
  */
 public class Ville extends Case {
 
+    /* Booléen qui définit si la porte est ouerte ou non => FAUX par défaut */
     private boolean porteOuverte;
+    /* Entrepôt */
     private int nbPlanches, nbMetal, nbBoissons, nbRation;
     
+    /* Constructeur */
     public Ville() {
         super(12, 12);
         
@@ -27,6 +28,7 @@ public class Ville extends Case {
         this.porteOuverte = false;
     }
     
+    /* Ouvre la porte */
     public boolean ouvrirPorte() {
         if(this.porteOuverte) {
             System.out.println("La porte est déjà ouverte !!!");
@@ -37,6 +39,7 @@ public class Ville extends Case {
         }
     }
     
+    /* Retourne VRAI si la porte est ouverte */
     public boolean porteOuverte(){
         return this.porteOuverte;
     }

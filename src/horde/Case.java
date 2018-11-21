@@ -11,17 +11,21 @@ package horde;
  */
 public class Case {
     
+    /* Coordonnées de la Case */
     private int x,y;
     
+    /* Constructeur */
     public Case(int _x, int _y) {
         this.x = _x;
         this.y = _y;
     }
 
+    /* Retourne la coordonnée x */
     public int getX() {
         return x;
     }
 
+    /* Retourne la coordonnée y */
     public int getY() {
         return y;
     }

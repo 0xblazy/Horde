@@ -5,6 +5,7 @@
  */
 package horde;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -13,16 +14,12 @@ import java.util.Scanner;
  * @author nK_BlaZy
  */
 public class Horde {
-
-    private final int MAX_PLANCHES = 1000;
-    private final int MAX_METAL = 500;
-    private final int MAX_BOISSONS = 100;
     
     /* Carte du jeu */
     private Case carte[][];
     
     private int nbCitoyens;
-    private Citoyen[] citoyens;
+    private ArrayList<Citoyen> citoyens;
     
     private Scanner sc;
     
@@ -31,7 +28,7 @@ public class Horde {
         this.carte = new Case[25][25];
         
         this.nbCitoyens = _nbCitoyens;
-        this.citoyens = new Citoyen[this.nbCitoyens];
+        this.citoyens = new ArrayList<>();
         
         this.sc = new Scanner(System.in);
     }
@@ -57,10 +54,12 @@ public class Horde {
         /* Ajoute les 1000 planches */
         for(int i = 0 ; i < 1000 ; i++){
             int x = ra.nextInt(25);
-            while(x == 12) x = ra.nextInt(25);
+            int y = ra.nextInt(25); 
             
-            int y = ra.nextInt(25);
-            while(y == 12) y = ra.nextInt(25);
+            while(x == 12 && y == 12){
+                x = ra.nextInt(25);
+                y = ra.nextInt(25);
+            }
             
             ((Exterieur) this.carte[y][x]).ajouterPlanche();
         }
@@ -68,10 +67,12 @@ public class Horde {
         /* Ajoute les 500 plaques */
         for(int i = 0 ; i < 500 ; i++){
             int x = ra.nextInt(25);
-            while(x == 12) x = ra.nextInt(25);
-            
             int y = ra.nextInt(25);
-            while(y == 12) y = ra.nextInt(25);
+            
+            while(x == 12 && y == 12){
+                x = ra.nextInt(25);
+                y = ra.nextInt(25);
+            }
             
             ((Exterieur) this.carte[y][x]).ajouterMetal();
         }
@@ -79,19 +80,21 @@ public class Horde {
         /* Ajoute les 100 boissons */
         for(int i = 0 ; i < 100 ; i++){
             int x = ra.nextInt(25);
-            while(x == 12) x = ra.nextInt(25);
-            
             int y = ra.nextInt(25);
-            while(y == 12) y = ra.nextInt(25);
+            
+            while(x == 12 && y == 12){
+                x = ra.nextInt(25);
+                y = ra.nextInt(25);
+            }
             
             ((Exterieur) this.carte[y][x]).ajouterBoisson();
         }
         
         System.out.println("Création des joueurs");
         
-        for(int i = 0 ; i < this.citoyens.length ; i++) {
+        for(int i = 0 ; i < this.nbCitoyens ; i++) {
             System.out.print("Joueur " + (i+1) + " : ");
-            this.citoyens[i] = new Citoyen(this.sc.nextLine(), this.carte);
+            this.citoyens.add(new Citoyen(this.sc.nextLine(), this.carte));
         }
     }
     
@@ -103,21 +106,22 @@ public class Horde {
                     System.out.print("| "
                             + ((Ville) carte[j][i]).affichageSimple() + " " );
                 } else {
-                    System.out.print("| "+
-                            ((Exterieur) carte[j][i]).affichageSimple() + " " );
+                    System.out.print("| "
+                            + ((Exterieur) carte[j][i])
+                                    .affichageSimple() + " " );
                 }
             }
             System.out.println("|");
         }
     }
 
-    /* Retourne le tableau de Citoyen */
-    public Citoyen[] getCitoyens() {
+    /* Retourne la liste de Citoyen */
+    public ArrayList<Citoyen> getCitoyens() {
         return citoyens;
     }
 
     /* Retourne le Citoyen en _i */
     public Citoyen getCitoyenAtI(int _i) {
-        return citoyens[_i];
+        return this.citoyens.get(_i);
     }
 }

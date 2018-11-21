@@ -158,7 +158,7 @@ public class Citoyen {
 
     }
 
-    /* Retourne le Citoyen sous la forme Nom (PV, PA) [x, y] */
+    /* Retourne le Citoyen sous la forme Nom (PV, PA) [x, y] Inventaire */
     public String toString() {
         String s = this.nom + " (" + this.pv + " PV, " + this.pa + " PA)";
 
