@@ -16,6 +16,9 @@ public class Citoyen {
 
     private String nom;
     private int pv, pa;
+    
+    /* PA Max */
+    private final int MAX_PA = 10;
 
     /* Coordonnées du Citoyen (12, 12 au début de la partie) */
     private int x, y;
@@ -157,6 +160,48 @@ public class Citoyen {
         }
 
     }
+    
+    /* Ouvre la porte de la ville */
+    public void ouvrirPorte() {
+        if(((Ville) this.carte[12][12]).ouvrirPorte()){
+            this.pa--;
+        }
+    }
+    
+    /* Ferme la porte de la ville */
+    public void fermerPorte() {
+        if(((Ville) this.carte[12][12]).fermerPorte()){
+            this.pa--;
+        }
+    }
+    
+    /* Prendre une ration */
+    public void prendreRation() {
+        if(this.invRestant() == 0) {
+            System.out.println("Il n'y plus de place dans l'inventaire");
+        } else if(((Ville) this.carte[12][12]).prendreRation()) {
+            this.nbRation++;
+        }
+    }
+    
+    /* Aller au puit */
+    public void allerAuPuit(){
+        this.pa += 6;
+        if(this.pa > this.MAX_PA) this.pa = this.MAX_PA;
+        System.out.println(this.nom + " va au puit, il a maintenant " +
+                this.pa + " PA");
+    }
+    
+    /* Remplir une goude */
+    public void remplirGourde(){
+        if(this.invRestant() == 0) {
+            System.out.println("Il n'y plus de place dans l'inventaire");
+        } else {
+            this.nbGourde++;
+            System.out.println(this.nom + " a maintenant " + this.nbGourde +
+                    " dans son inventaire");
+        }
+    }
 
     /* Retourne le Citoyen sous la forme Nom (PV, PA) [x, y] Inventaire */
     public String toString() {
@@ -180,4 +225,17 @@ public class Citoyen {
         return s;
     }
 
+    public String getNom() {
+        return this.nom;
+    }
+    
+    public int invRestant() {
+        return 10 - (this.nbPlanche + this.nbMetal + this.nbBoisson + 
+                this.nbGourde + this.nbRation);
+    }
+
+    public boolean isEnVille() {
+        return this.enVille;
+    }
+    
 }

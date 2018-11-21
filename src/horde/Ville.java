@@ -34,7 +34,32 @@ public class Ville extends Case {
             System.out.println("La porte est déjà ouverte !!!");
             return false;
         } else {
+            System.out.println("La porte s'ouvre");
             this.porteOuverte = true;
+            return true;
+        }
+    }
+    
+    /* Ferme la porte */
+    public boolean fermerPorte() {
+        if(!this.porteOuverte) {
+            System.out.println("La porte est déjà fermée !!!");
+            return false;
+        } else {
+            System.out.println("La porte se ferme");
+            this.porteOuverte = true;
+            return true;
+        }
+    }
+    
+    /* Prendre une ration */
+    public boolean prendreRation(){
+        if(this.nbRation == 0) {
+            System.out.println("Il n'y a plus de ration dans l'entrepôt");
+            return false;
+        } else {
+            this.nbRation--;
+            System.out.println("Il reste " + this.nbRation + " rations");
             return true;
         }
     }
