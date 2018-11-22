@@ -47,7 +47,7 @@ public class Ville extends Case {
             return false;
         } else {
             System.out.println("La porte se ferme");
-            this.porteOuverte = true;
+            this.porteOuverte = false;
             return true;
         }
     }
@@ -67,6 +67,11 @@ public class Ville extends Case {
     /* Retourne VRAI si la porte est ouverte */
     public boolean porteOuverte(){
         return this.porteOuverte;
+    }
+    
+    /* Retourne le nombre de zombie auquel la ville peut résister */
+    public int defenses() {
+        return 20;
     }
     
     public String affichageSimple() {

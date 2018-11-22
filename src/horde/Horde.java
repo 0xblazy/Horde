@@ -29,6 +29,9 @@ public class Horde {
     /* Scanner */
     private Scanner sc;
     
+    /* Random */
+    private Random ra;
+    
     /* Constructeur */
     public Horde(int _nbCitoyens) {
         this.carte = new Case[25][25];
@@ -40,6 +43,8 @@ public class Horde {
         this.actionExterieur = new ArrayList<>();
         
         this.sc = new Scanner(System.in);
+        
+        this.ra = new Random();
     }
     
     /* Initialise la partie => Génère la carte, ajoute les planches, le métal et
@@ -71,8 +76,6 @@ public class Horde {
         
         System.out.println("Génération de la carte...\n");
         
-        Random ra = new Random();
-        
         /* Créé toute les Cases que la carte */
         for(int j = 0 ; j < 25 ; j++) {
             for(int i = 0 ; i < 25 ; i++) {
@@ -86,12 +89,12 @@ public class Horde {
         
         /* Ajoute les 1000 planches */
         for(int i = 0 ; i < 1000 ; i++){
-            int x = ra.nextInt(25);
-            int y = ra.nextInt(25); 
+            int x = this.ra.nextInt(25);
+            int y = this.ra.nextInt(25); 
             
             while(x == 12 && y == 12){
-                x = ra.nextInt(25);
-                y = ra.nextInt(25);
+                x = this.ra.nextInt(25);
+                y = this.ra.nextInt(25);
             }
             
             ((Exterieur) this.carte[y][x]).ajouterPlanche();
@@ -99,12 +102,12 @@ public class Horde {
         
         /* Ajoute les 500 plaques */
         for(int i = 0 ; i < 500 ; i++){
-            int x = ra.nextInt(25);
-            int y = ra.nextInt(25);
+            int x = this.ra.nextInt(25);
+            int y = this.ra.nextInt(25);
             
             while(x == 12 && y == 12){
-                x = ra.nextInt(25);
-                y = ra.nextInt(25);
+                x = this.ra.nextInt(25);
+                y = this.ra.nextInt(25);
             }
             
             ((Exterieur) this.carte[y][x]).ajouterMetal();
@@ -112,12 +115,12 @@ public class Horde {
         
         /* Ajoute les 100 boissons */
         for(int i = 0 ; i < 100 ; i++){
-            int x = ra.nextInt(25);
-            int y = ra.nextInt(25);
+            int x = this.ra.nextInt(25);
+            int y = this.ra.nextInt(25);
             
             while(x == 12 && y == 12){
-                x = ra.nextInt(25);
-                y = ra.nextInt(25);
+                x = this.ra.nextInt(25);
+                y = this.ra.nextInt(25);
             }
             
             ((Exterieur) this.carte[y][x]).ajouterBoisson();
@@ -132,43 +135,93 @@ public class Horde {
     }
     
     public void jouer() {
-        /* Tant qu'il reste des joueurs */
-        while(!this.citoyens.isEmpty()) {
+        int jour = 0;
+        int nbZ = 0;
+        
+        /* Tant qu'il reste plus d'un joueur */
+        while(this.citoyens.size() > 1) {
+            
+            jour++;
+            nbZ += 10;
+            int tour = 0;
+            
+            System.out.println("==== JOUR " + jour + " ====");
             
             /* Boucle sur les 12 tours d'une journée */
             for(int i = 0 ; i < 12 ; i++) {
                 
+                tour++;
+                
                 /* Pour chaque Citoyen de this.citoyens */
                 for(Citoyen citoyen : this.citoyens) {
                     
+                    System.out.println("Jour " + jour + " - Tour " + tour);
                     System.out.println(citoyen);
                     
                     boolean continuer = true;
                     /* Tant que le Citoyen souhaite continuer à jouer */
                     while(continuer) {
+                        if(citoyen.estMort()) {
+                            System.out.println(citoyen.getNom() + " est mort");
+                            continuer = false;
+                            this.citoyens.remove(citoyen);
+                        }
+                        System.out.println("== ACTIONS ==");
                         if(citoyen.isEnVille()) {
-                            for(int j = 0 ; j < this.actionVille.size() ; i++) {
-                                System.out.println(this.actionVille.get(j));
+                            for(String action : this.actionVille){
+                                System.out.println("  " + action);
                             }
-                            
-                            System.out.println("/nAction : ");
-                            continuer = this.actionVille(citoyen, sc.nextInt());
+                            System.out.print("Action : ");
+                            continuer = this.actionVille(citoyen, 
+                                    this.sc.nextInt());
                         } else {
-                            for(int j = 0 ; j < this.actionExterieur.size()
-                                    ; i++) {
-                                System.out.println(this.actionExterieur.get(j));
+                            for(String action : this.actionExterieur){
+                                System.out.println("  " + action);
                             }
-                            
-                            System.out.println("/nAction : ");
-                            continuer = this.actionExterieur(citoyen,
-                                    sc.nextInt());
+                            System.out.print("Action : ");
+                            continuer = this.actionExterieur(citoyen, 
+                                    this.sc.nextInt());
                         }
                     }
+                    citoyen.finDeTour();
                 }
             }
+            
+            System.out.println("La journée est finie, les zombies arrivent...");
+            
+            ArrayList<Citoyen> citoyensMorts = new ArrayList<>();
+            
+            for(Citoyen citoyen : this.citoyens) {
+                if(!citoyen.isEnVille()) {
+                    citoyensMorts.add(citoyen);
+                    this.citoyens.remove(citoyen);
+                }
+            }
+            
+            int nbZombie = nbZ + this.ra.nextInt(11);
+            
+            if(nbZombie > ((Ville)this.carte[12][12]).defenses()) {
+                System.out.println("Les zombies ont réussi à passer les "
+                        + "défenses de la ville...");
+                
+                int nbVictimes = this.citoyens.size() / 2;
+                for(int i = 0 ; i < nbVictimes ; i++) {
+                    int a = this.ra.nextInt(this.citoyens.size());
+                    citoyensMorts.add(this.citoyens.get(a));
+                    this.citoyens.remove(a);
+                }
+            }
+            
+            System.out.println("==== BILAN DE LA NUIT ====");
+            System.out.println(citoyensMorts.size() + " morts");
+            for(Citoyen citoyenMort : citoyensMorts) {
+                System.out.println(citoyenMort.getNom());
+            }
+            
         }
         
         System.out.println("===== PARTIE TERMINEE =====");
+        System.out.println("Gagnant : " + this.citoyens.get(0).getNom());
     }
     
     /* Gère les actions en Ville */
@@ -205,7 +258,14 @@ public class Horde {
         }
         /* Se déplacer */
         if(_action == 6) {
-            
+            System.out.println("Déplacement vers :");
+            System.out.println("  1 - Nord");
+            System.out.println("  2 - Sud");
+            System.out.println("  3 - Est");
+            System.out.println("  4 - Ouest");
+            System.out.print("Direction : ");
+            _citoyen.deplacer(this.sc.nextInt());
+            return true;
         }
         return true;
     }
@@ -213,39 +273,57 @@ public class Horde {
     private boolean actionExterieur(Citoyen _citoyen, int _action) {
         /* Passer son tour */
         if(_action == 0) {
-            
+            System.out.println(_citoyen.getNom() + " passe son tour");
+            return false;
         }
         /* Fouiller */
         if(_action == 1) {
-            
+            _citoyen.fouiller();
+            return true;
         }
-        /* Récuperer planches */
+        /* Récupérer planches */
         if(_action == 2) {
-            
+            System.out.print("Nombre de planches de bois : ");
+            _citoyen.prendrePlanches(this.sc.nextInt());
+            return true;
         }
         /* Récupérer plaques */
         if(_action == 3) {
-            
+            System.out.print("Nombre de plaques de métal : ");
+            _citoyen.prendreMetal(this.sc.nextInt());
+            return true;
         }
         /* Récupérer boissons */
         if(_action == 4) {
-            
+            System.out.print("Nombre de boissons énergisantes : ");
+            _citoyen.prendreBoissons(this.sc.nextInt());
+            return true;
         }
         /* Attaquer zombies */
         if(_action == 5) {
-            
+            _citoyen.attaquerZombie();
+            return true;
         }
         /* Manger une ration */
         if(_action == 6) {
-            
+            _citoyen.mangerRation();
+            return true;
         }
         /* Boire une goude */
         if(_action == 7) {
-            
+            _citoyen.boireGourde();
+            return true;
         }
         /* Se déplacer */
         if(_action == 9) {
-            
+            System.out.println("Déplacement vers :");
+            System.out.println("  1 - Nord");
+            System.out.println("  2 - Sud");
+            System.out.println("  3 - Est");
+            System.out.println("  4 - Ouest");
+            System.out.print("Direction : ");
+            _citoyen.deplacer(this.sc.nextInt());
+            return true;
         }
         return false;
     }

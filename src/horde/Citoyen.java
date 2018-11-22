@@ -16,7 +16,7 @@ public class Citoyen {
 
     private String nom;
     private int pv, pa;
-    
+
     /* PA Max */
     private final int MAX_PA = 10;
 
@@ -28,7 +28,9 @@ public class Citoyen {
     private final int TAILLE_SAC = 10;
     /* Variables contenants le nombre d'items que possède le joueur dans son
     inventaire (le total de doit pas être supérieur à TAILLE_SAC */
-    private int nbPlanche, nbMetal, nbBoisson, nbGourde, nbRation;
+    private int nbPlanche, nbMetal, nbBoissons, nbGourde, nbRation;
+
+    private boolean aBu, aMange;
 
     /* Contructeur */
     public Citoyen(String _nom, Case[][] _carte) {
@@ -57,7 +59,7 @@ public class Citoyen {
         if (this.enVille) {
             if (!((Ville) this.carte[12][12]).porteOuverte()) {
                 System.out.println("La porte de la ville est fermée" + this.nom
-                        + "ne peux pas se déplacer !");
+                        + "ne peut pas se déplacer !");
                 return false;
             }
         } else {
@@ -75,13 +77,20 @@ public class Citoyen {
         /* Nord */
         if (_direction == 1) {
             if (this.y == 0) {
-                System.out.println(this.nom + " ne peut pas au Nord !");
+                System.out.println(this.nom + " ne peut pas aller au Nord !");
                 return false;
+            }
+            if (this.x == 12 && this.y - 1 == 12) {
+                if (((Ville) this.carte[this.y - 1][this.x]).porteOuverte()) {
+                    this.deplacerN();
+                    return true;
+                } else {
+                    System.out.println("La porte est fermée " + this.nom 
+                            + " est coincé dehors");
+                    return false;
+                }
             } else {
-                this.y--;
-                this.pa--;
-                System.out.println(this.nom + "se déplace aux coordonnées"
-                        + this.x + this.y);
+                this.deplacerN();
                 return true;
             }
         }
@@ -91,11 +100,18 @@ public class Citoyen {
             if (this.y == 24) {
                 System.out.println(this.nom + " ne peut pas aller au Sud !");
                 return false;
+            }
+            if (this.x == 12 && this.y + 1 == 12) {
+                if (((Ville) this.carte[this.y + 1][this.x]).porteOuverte()) {
+                    this.deplacerS();
+                    return true;
+                } else {
+                    System.out.println("La porte est fermée " + this.nom 
+                            + " est coincé dehors");
+                    return false;
+                }
             } else {
-                this.y++;
-                this.pa--;
-                System.out.println(this.nom + "se déplace aux coordonnées"
-                        + this.x + this.y);
+                this.deplacerS();
                 return true;
             }
         }
@@ -105,11 +121,18 @@ public class Citoyen {
             if (this.x == 24) {
                 System.out.println(this.nom + " ne peut pas aller à l'Est !");
                 return false;
+            }
+            if (this.x + 1 == 12 && this.y == 12) {
+                if (((Ville) this.carte[this.y][this.x + 1]).porteOuverte()) {
+                    this.deplacerE();
+                    return true;
+                } else {
+                    System.out.println("La porte est fermée " + this.nom 
+                            + " est coincé dehors");
+                    return false;
+                }
             } else {
-                this.x++;
-                this.pa--;
-                System.out.println(this.nom + "se déplace aux coordonnées"
-                        + this.x + this.y);
+                this.deplacerE();
                 return true;
             }
         }
@@ -119,87 +142,298 @@ public class Citoyen {
             if (this.x == 0) {
                 System.out.println(this.nom + " ne peut pas aller à l'Ouest !");
                 return false;
+            }
+            if (this.x - 1 == 12 && this.y == 12) {
+                if (((Ville) this.carte[this.y][this.x - 1]).porteOuverte()) {
+                    this.deplacerO();
+                    return true;
+                } else {
+                    System.out.println("La porte est fermée " + this.nom 
+                            + " est coincé dehors");
+                    return false;
+                }
             } else {
-                this.x--;
-                this.pa--;
-                System.out.println(this.nom + "se déplace aux coordonnées"
-                        + this.x + this.y);
+                this.deplacerO();
                 return true;
             }
         }
         return false;
     }
 
-    /* Permet d'attaquer un zombie => Retourne false si l'action ne s'effectue
-    pas */
-    public boolean attaquer() {
-        /* Vérifie si le Citoyen est en Ville */
-        if(enVille) {
-            System.out.println(this.nom + " en est ville !");
-            return false;
+    private boolean deplacerN() {
+        this.y--;
+        this.pa--;
+        if (this.carte[this.y][this.x] instanceof Exterieur) {
+            System.out.println((Exterieur) this.carte[this.y][this.x]);
+        } else {
+            System.out.println("En ville");
         }
+        System.out.println(this.nom + " a maintenant " + this.pa
+                + " PA");
+        this.enVille = (this.x == 12 && this.y == 12);
+        return true;
+    }
+
+    private boolean deplacerS() {
+        this.y++;
+        this.pa--;
+        if (this.carte[this.y][this.x] instanceof Exterieur) {
+            System.out.println((Exterieur) this.carte[this.y][this.x]);
+        } else {
+            System.out.println("En ville");
+        }
+        System.out.println(this.nom + " a maintenant " + this.pa
+                + " PA");
+        this.enVille = (this.x == 12 && this.y == 12);
+        return true;
+    }
+
+    private boolean deplacerE() {
+        this.x++;
+        this.pa--;
+        if (this.carte[this.y][this.x] instanceof Exterieur) {
+            System.out.println((Exterieur) this.carte[this.y][this.x]);
+        } else {
+            System.out.println("En ville");
+        }
+        System.out.println(this.nom + " a maintenant " + this.pa
+                + " PA");
+        this.enVille = (this.x == 12 && this.y == 12);
+        return true;
+    }
+
+    private boolean deplacerO() {
+        this.x--;
+        this.pa--;
+        if (this.carte[this.y][this.x] instanceof Exterieur) {
+            System.out.println((Exterieur) this.carte[this.y][this.x]);
+        } else {
+            System.out.println("En ville");
+        }
+        System.out.println(this.nom + " a maintenant " + this.pa
+                + " PA");
+        this.enVille = (this.x == 12 && this.y == 12);
+        return true;
+    }
+
+    /* ACTIONS EN VILLE */
+ /* Ouvre la porte de la ville */
+    public boolean ouvrirPorte() {
         /* Vérifie si le Citoyen n'a plus de PA */
-        if(this.pa == 0) {
+        if (this.pa == 0) {
             System.out.println(this.nom + " n'a plus de point d'action !");
             return false;
         }
-        
-        /* Essaye d'attaquer un zombie */
-        if(((Exterieur) this.carte[this.y][this.x]).attaquerZombie()) {
+        if (((Ville) this.carte[12][12]).ouvrirPorte()) {
+            this.pa--;
+            System.out.println(this.nom + " a maintenant " + this.pa
+                    + " PA");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* Ferme la porte de la ville */
+    public boolean fermerPorte() {
+        /* Vérifie si le Citoyen n'a plus de PA */
+        if (this.pa == 0) {
+            System.out.println(this.nom + " n'a plus de point d'action !");
+            return false;
+        }
+        if (((Ville) this.carte[12][12]).fermerPorte()) {
+            this.pa--;
+            System.out.println(this.nom + " a maintenant " + this.pa
+                    + " PA");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* Prendre une ration */
+    public boolean prendreRation() {
+        if (this.invRestant() == 0) {
+            System.out.println("Il n'y plus de place dans l'inventaire");
+            return false;
+        }
+        if (this.nbRation == 1) {
+            System.out.println(this.nom + " a déjà une ration dans son "
+                    + "inventaire");
+            return false;
+        }
+        if (((Ville) this.carte[12][12]).prendreRation()) {
+            this.nbRation = 1;
+            System.out.println(this.getInventaire());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* Aller au puit */
+    public void allerAuPuit() {
+        this.pa += 6;
+        if (this.pa > this.MAX_PA) {
+            this.pa = this.MAX_PA;
+        }
+        System.out.println(this.nom + " va au puit, il a maintenant "
+                + this.pa + " PA");
+    }
+
+    /* Remplir une goude */
+    public boolean remplirGourde() {
+        if (this.invRestant() == 0) {
+            System.out.println("Il n'y plus de place dans l'inventaire");
+            return false;
+        }
+        if (this.nbGourde == 1) {
+            System.out.println(this.nom + " a déjà une gourde dans son "
+                    + "inventaire");
+            return false;
+        }
+        this.nbGourde++;
+        System.out.println(this.getInventaire());
+        return true;
+    }
+
+    /* ACTIONS EXTERIEUR */
+
+ /* Fouille la Case Exterieur sur laquelle est le Citoyen */
+    public boolean fouiller() {
+        /* Vérifie si le Citoyen n'a plus de PA */
+        if (this.pa == 0) {
+            System.out.println(this.nom + " n'a plus de point d'action !");
+            return false;
+        }
+        if (((Exterieur) this.carte[this.y][this.x]).fouiller()) {
+            this.pa--;
+            System.out.println(((Exterieur) this.carte[this.y][this.x])
+                    .getItems());
+            System.out.println(this.nom + " a maintenant " + this.pa
+                    + " PA");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* Prend _qt planches s'il y a assez de place dans l'inventaire */
+    public boolean prendrePlanches(int _qt) {
+        if (this.invRestant() - _qt < 0) {
+            System.out.println("Il n'y a pas assez de place dans l'inventaire");
+            return false;
+        }
+        if (((Exterieur) this.carte[this.y][this.x]).prendrePlanches(_qt)) {
+            this.nbPlanche += _qt;
+            System.out.println(this.getInventaire());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* Prend _qt plaques s'il y a assez de place dans l'inventaire */
+    public boolean prendreMetal(int _qt) {
+        if (this.invRestant() - _qt < 0) {
+            System.out.println("Il n'y a pas assez de place dans l'inventaire");
+            return false;
+        }
+        if (((Exterieur) this.carte[this.y][this.x]).prendreMetal(_qt)) {
+            this.nbMetal += _qt;
+            System.out.println(this.getInventaire());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* Prend _qt boisson s'il y a assez de place dans l'inventaire */
+    public boolean prendreBoissons(int _qt) {
+        if (this.invRestant() - _qt < 0) {
+            System.out.println("Il n'y a pas assez de place dans l'inventaire");
+            return false;
+        }
+        if (((Exterieur) this.carte[this.y][this.x]).prendreBoissons(_qt)) {
+            this.nbBoissons += _qt;
+            System.out.println(this.getInventaire());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /* Permet d'attaquer un zombie */
+    public boolean attaquerZombie() {
+        /* Vérifie si le Citoyen n'a plus de PA */
+        if (this.pa == 0) {
+            System.out.println(this.nom + " n'a plus de point d'action !");
+            return false;
+        }
+
+        if (((Exterieur) this.carte[this.y][this.x]).attaquerZombie()) {
             System.out.println(this.nom + " attaque un zombie");
             this.pa--;
 
             if (Math.random() * 100 < 10) {
                 System.out.println(this.nom + " est blessé !");
                 this.pv -= 10;
+                System.out.println(this.nom + " a maintenant " + this.pv
+                        + " PV");
             }
+            System.out.println(this.nom + " a maintenant " + this.pa
+                    + " PA");
+
             return true;
-        } else {
-            System.out.println("Il n'y a pas de zombies sur cette case");
+        }
+        return false;
+    }
+
+    /* Permet de récupérer 6 PA en mangeant une ration */
+    public boolean mangerRation() {
+        if (this.aMange) {
+            System.out.println(this.nom + " a déjà mangé une ration "
+                    + "aujourd'hui");
             return false;
         }
-
-    }
-    
-    /* Ouvre la porte de la ville */
-    public void ouvrirPorte() {
-        if(((Ville) this.carte[12][12]).ouvrirPorte()){
-            this.pa--;
-        }
-    }
-    
-    /* Ferme la porte de la ville */
-    public void fermerPorte() {
-        if(((Ville) this.carte[12][12]).fermerPorte()){
-            this.pa--;
-        }
-    }
-    
-    /* Prendre une ration */
-    public void prendreRation() {
-        if(this.invRestant() == 0) {
-            System.out.println("Il n'y plus de place dans l'inventaire");
-        } else if(((Ville) this.carte[12][12]).prendreRation()) {
-            this.nbRation++;
-        }
-    }
-    
-    /* Aller au puit */
-    public void allerAuPuit(){
-        this.pa += 6;
-        if(this.pa > this.MAX_PA) this.pa = this.MAX_PA;
-        System.out.println(this.nom + " va au puit, il a maintenant " +
-                this.pa + " PA");
-    }
-    
-    /* Remplir une goude */
-    public void remplirGourde(){
-        if(this.invRestant() == 0) {
-            System.out.println("Il n'y plus de place dans l'inventaire");
+        if (this.nbRation == 0) {
+            System.out.println(this.nom + " n'a plus de ration dans son "
+                    + "inventaire");
+            return false;
         } else {
-            this.nbGourde++;
-            System.out.println(this.nom + " a maintenant " + this.nbGourde +
-                    " dans son inventaire");
+            this.nbRation = 0;
+            this.aMange = true;
+            this.pa += 6;
+            if (this.pa > this.MAX_PA) {
+                this.pa = this.MAX_PA;
+            }
+            System.out.println(this.getInventaire());
+            System.out.println(this.nom + " a maintenant " + this.pa + " PA");
+            return true;
+        }
+    }
+
+    /* Permet de récupérer 6 PA en mangeant une ration */
+    public boolean boireGourde() {
+        if (this.aBu) {
+            System.out.println(this.nom + " a déjà bu une gourde "
+                    + "aujourd'hui");
+            return false;
+        }
+        if (this.nbGourde == 0) {
+            System.out.println(this.nom + " n'a plus de gourde dans son "
+                    + "inventaire");
+            return false;
+        } else {
+            this.nbGourde = 0;
+            this.aBu = true;
+            this.pa += 6;
+            if (this.pa > this.MAX_PA) {
+                this.pa = this.MAX_PA;
+            }
+            System.out.println(this.getInventaire());
+            System.out.println(this.nom + " a maintenant " + this.pa + " PA");
+            return true;
         }
     }
 
@@ -212,13 +446,19 @@ public class Citoyen {
         } else {
             s += " [" + this.x + "," + this.y + "]\n";
         }
-        
-        s += "  Inventaire (" + (this.nbPlanche + this.nbMetal + this.nbBoisson 
-                + this.nbGourde + this.nbRation) + "/" + this.TAILLE_SAC 
-                + "):\n";
+
+        s += this.getInventaire();
+
+        return s;
+    }
+
+    public String getInventaire() {
+        String s = "  Inventaire (" + (this.nbPlanche + this.nbMetal
+                + this.nbBoissons + this.nbGourde + this.nbRation)
+                + "/" + this.TAILLE_SAC + "):\n";
         s += "    - Planches de bois : " + this.nbPlanche + "\n";
         s += "    - Plaques de métal : " + this.nbMetal + "\n";
-        s += "    - Boissons énergisantes : " + this.nbBoisson + "\n";
+        s += "    - Boissons énergisantes : " + this.nbBoissons + "\n";
         s += "    - Gourdes : " + this.nbGourde + "\n";
         s += "    - Rations : " + this.nbRation + "\n";
 
@@ -228,14 +468,28 @@ public class Citoyen {
     public String getNom() {
         return this.nom;
     }
-    
+
     public int invRestant() {
-        return 10 - (this.nbPlanche + this.nbMetal + this.nbBoisson + 
-                this.nbGourde + this.nbRation);
+        return 10 - (this.nbPlanche + this.nbMetal + this.nbBoissons
+                + this.nbGourde + this.nbRation);
     }
 
     public boolean isEnVille() {
         return this.enVille;
     }
-    
+
+    public boolean estMort() {
+        if (this.pv < 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public void finDeTour() {
+        this.pa += 4;
+        if (this.pa > this.MAX_PA) {
+            this.pa = this.MAX_PA;
+        }
+    }
+
 }

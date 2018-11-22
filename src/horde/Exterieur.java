@@ -21,11 +21,11 @@ public class Exterieur extends Case {
     /* Constructeur */
     public Exterieur(int _x, int _y) {
         super(_x, _y);
-        
+
         this.nbPlanches = 0;
         this.nbMetal = 0;
         this.nbBoissons = 0;
-        
+
         int i = (int) (Math.random() * 100);
         if (i < 30) {
             this.nbZombies = 0;
@@ -35,70 +35,73 @@ public class Exterieur extends Case {
 
         this.fouiller = false;
     }
-    
+
     /* Fouille une case */
-    public boolean fouiller(){
-        if(this.fouiller) {
+    public boolean fouiller() {
+        if (this.fouiller) {
             System.out.println("Cette case a déjà été fouillée !!!");
             return false;
         } else {
             this.fouiller = true;
             return true;
         }
-        
+
     }
-    
+
     public void ajouterPlanche() {
-        this.nbPlanches ++;
+        this.nbPlanches++;
     }
-    
-     public void ajouterMetal() {
-        this.nbMetal ++;
+
+    public void ajouterMetal() {
+        this.nbMetal++;
     }
-     
+
     public void ajouterBoisson() {
-        this.nbBoissons ++;
+        this.nbBoissons++;
     }
-    
+
     /* Prend _qt Planches de la Case */
     public boolean prendrePlanches(int _qt) {
-        if(this.nbPlanches - _qt < 0){
+        if (this.nbPlanches - _qt < 0) {
             System.out.println("Il n'y a que " + this.nbPlanches
-                    + " planches sur cette case");
+                    + " planches de bois sur cette case");
             return false;
         } else {
             this.nbPlanches -= _qt;
+            System.out.println(this.getItems());
             return true;
         }
     }
-    
+
     /* Prend _qt Metal de la Case */
     public boolean prendreMetal(int _qt) {
-        if(this.nbMetal - _qt < 0){
+        if (this.nbMetal - _qt < 0) {
             System.out.println("Il n'y a que " + this.nbMetal
                     + " plaques de métal sur cette case");
             return false;
         } else {
             this.nbMetal -= _qt;
+            System.out.println(this.getItems());
             return true;
         }
     }
-    
+
     /* Prend _qt Boissons de la Case */
     public boolean prendreBoissons(int _qt) {
-        if(this.nbBoissons - _qt < 0){
+        if (this.nbBoissons - _qt < 0) {
             System.out.println("Il n'y a que " + this.nbBoissons
                     + " boisson énergisantes sur cette case");
             return false;
         } else {
             this.nbBoissons -= _qt;
+            System.out.println(this.getItems());
             return true;
         }
     }
-    
+
     /* Attaque un Zombie => retourne VRAI si il a des zombie à attaquer */
     public boolean attaquerZombie() {
-        if(this.nbZombies == 0){
+        if (this.nbZombies == 0) {
             System.out.println("Il n'y a plus de zombies !!!");
             return false;
         } else {
@@ -106,12 +109,12 @@ public class Exterieur extends Case {
             return true;
         }
     }
-    
+
     /* Test si il reste des zombies */
-    public boolean encoreZombies(){
+    public boolean encoreZombies() {
         return !(this.nbZombies == 0);
     }
-    
+
     /* Retourne la case Exterieur sous la forme Case x, y : -Zombies = nbZombie
     (ajoute les items à la chaîne si la case Exterieur est fouillée)*/
     public String toString() {
@@ -119,16 +122,22 @@ public class Exterieur extends Case {
         s += "  -Zombies = " + this.nbZombies + "\n";
 
         if (this.fouiller) {
-            s += "  -Items =\n";
-            s += "    -Planches x" + this.nbPlanches + "\n";
-            s += "    -Plaques de métal x" + this.nbMetal + "\n";
-            s += "    -Boissons énergisantes x" + this.nbBoissons + "\n";
+            s += this.getItems();
         }
 
         return s;
     }
-    
-    public String affichageSimple(){
+
+    public String getItems() {
+        String s = "  -Items =\n";
+        s += "    -Planches x" + this.nbPlanches + "\n";
+        s += "    -Plaques de métal x" + this.nbMetal + "\n";
+        s += "    -Boissons énergisantes x" + this.nbBoissons + "\n";
+
+        return s;
+    }
+
+    public String affichageSimple() {
         return "Z" + this.nbZombies + " P" + this.nbPlanches + " M"
                 + this.nbMetal + " B" + this.nbBoissons;
     }
