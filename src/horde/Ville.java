@@ -28,7 +28,7 @@ public class Ville extends Case {
         this.porteOuverte = false;
     }
     
-    /* Ouvre la porte */
+    /* Ouvre la porte => Retourne FALSE si elle était déjà ouverte */
     public boolean ouvrirPorte() {
         if(this.porteOuverte) {
             System.out.println("La porte est déjà ouverte !!!");
@@ -40,7 +40,7 @@ public class Ville extends Case {
         }
     }
     
-    /* Ferme la porte */
+    /* Ferme la porte => Retourne FALSE si elle était déjà fermée */
     public boolean fermerPorte() {
         if(!this.porteOuverte) {
             System.out.println("La porte est déjà fermée !!!");
@@ -52,7 +52,8 @@ public class Ville extends Case {
         }
     }
     
-    /* Prendre une ration */
+    /* Prendre une ration de l'entrepôt => Retourne FALSE si il n'y a plus de 
+    ration dans l'entrepôt */
     public boolean prendreRation(){
         if(this.nbRation == 0) {
             System.out.println("Il n'y a plus de ration dans l'entrepôt");
@@ -69,7 +70,8 @@ public class Ville extends Case {
         return this.porteOuverte;
     }
     
-    /* Retourne le nombre de zombie auquel la ville peut résister */
+    /* Retourne le nombre de zombie auquel la ville peut résister (20 + la 
+    défense des Contructions) */
     public int defenses() {
         return 20;
     }

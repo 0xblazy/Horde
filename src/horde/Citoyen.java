@@ -29,7 +29,8 @@ public class Citoyen {
     /* Variables contenants le nombre d'items que possède le joueur dans son
     inventaire (le total de doit pas être supérieur à TAILLE_SAC */
     private int nbPlanche, nbMetal, nbBoissons, nbGourde, nbRation;
-
+    /* Booleens passant à TRUE après avoir bu une gourde ou mangé une ration
+    => Repasse à FALSE à la fin de la journée */
     private boolean aBu, aMange;
 
     /* Contructeur */
@@ -45,8 +46,11 @@ public class Citoyen {
         this.enVille = true;
     }
 
+    
+    /* DEPLACEMENTS */
+    
     /* Permet au joueur de se déplacer dans la direction choisie (1 = Nord, 2 = 
-    Sud, 3 = Est, 4 = Ouest) => Retourne false si l'action de n'effectue pas */
+    Sud, 3 = Est, 4 = Ouest) */
     public boolean deplacer(int _direction) {
         /* Vérifie la direction donnée */
         if (_direction < 1 || _direction > 4) {
@@ -159,7 +163,8 @@ public class Citoyen {
         }
         return false;
     }
-
+    
+    /* Déplace le Citoyen au Nord */
     private boolean deplacerN() {
         this.y--;
         this.pa--;
@@ -173,7 +178,8 @@ public class Citoyen {
         this.enVille = (this.x == 12 && this.y == 12);
         return true;
     }
-
+    
+    /* Déplace le Citoyen au Sud */
     private boolean deplacerS() {
         this.y++;
         this.pa--;
@@ -187,7 +193,8 @@ public class Citoyen {
         this.enVille = (this.x == 12 && this.y == 12);
         return true;
     }
-
+    
+    /* Déplace le Citoyen à l'Est */
     private boolean deplacerE() {
         this.x++;
         this.pa--;
@@ -201,7 +208,8 @@ public class Citoyen {
         this.enVille = (this.x == 12 && this.y == 12);
         return true;
     }
-
+    
+    /* Déplace le Citoyen à l'Ouest */
     private boolean deplacerO() {
         this.x--;
         this.pa--;
@@ -216,8 +224,10 @@ public class Citoyen {
         return true;
     }
 
+    
     /* ACTIONS EN VILLE */
- /* Ouvre la porte de la ville */
+    
+    /* Ouvre la porte de la ville */
     public boolean ouvrirPorte() {
         /* Vérifie si le Citoyen n'a plus de PA */
         if (this.pa == 0) {
@@ -251,7 +261,7 @@ public class Citoyen {
         }
     }
 
-    /* Prendre une ration */
+    /* Prend une ration dans l'entrepôt */
     public boolean prendreRation() {
         if (this.invRestant() == 0) {
             System.out.println("Il n'y plus de place dans l'inventaire");
@@ -271,7 +281,7 @@ public class Citoyen {
         }
     }
 
-    /* Aller au puit */
+    /* Va au puit pour récupérer 6 PA */
     public void allerAuPuit() {
         this.pa += 6;
         if (this.pa > this.MAX_PA) {
@@ -281,7 +291,7 @@ public class Citoyen {
                 + this.pa + " PA");
     }
 
-    /* Remplir une goude */
+    /* Remplis une goude et l'ajoute à l'inventaire */
     public boolean remplirGourde() {
         if (this.invRestant() == 0) {
             System.out.println("Il n'y plus de place dans l'inventaire");
@@ -297,9 +307,10 @@ public class Citoyen {
         return true;
     }
 
+    
     /* ACTIONS EXTERIEUR */
 
- /* Fouille la Case Exterieur sur laquelle est le Citoyen */
+    /* Fouille la Case Exterieur sur laquelle est le Citoyen */
     public boolean fouiller() {
         /* Vérifie si le Citoyen n'a plus de PA */
         if (this.pa == 0) {
@@ -413,7 +424,7 @@ public class Citoyen {
         }
     }
 
-    /* Permet de récupérer 6 PA en mangeant une ration */
+    /* Permet de récupérer 6 PA en buvant une gourde */
     public boolean boireGourde() {
         if (this.aBu) {
             System.out.println(this.nom + " a déjà bu une gourde "
@@ -437,6 +448,7 @@ public class Citoyen {
         }
     }
 
+    
     /* Retourne le Citoyen sous la forme Nom (PV, PA) [x, y] Inventaire */
     public String toString() {
         String s = this.nom + " (" + this.pv + " PV, " + this.pa + " PA)";
@@ -452,6 +464,8 @@ public class Citoyen {
         return s;
     }
 
+    /* Retourne l'inventaire du Citoyen sous la forme d'une chaîne de 
+    caractère */
     public String getInventaire() {
         String s = "  Inventaire (" + (this.nbPlanche + this.nbMetal
                 + this.nbBoissons + this.nbGourde + this.nbRation)
@@ -465,19 +479,24 @@ public class Citoyen {
         return s;
     }
 
+    /* Retourne le nom du Citoyen */
     public String getNom() {
         return this.nom;
     }
 
+    /* Retourne un entier correspondant au nombre d'emplacements restants dans
+    l'inventaire */
     public int invRestant() {
         return 10 - (this.nbPlanche + this.nbMetal + this.nbBoissons
                 + this.nbGourde + this.nbRation);
     }
 
+    /* TRUE si le Citoyen est en Ville, FALSE sinon */
     public boolean isEnVille() {
         return this.enVille;
     }
 
+    /* TRUE si le Citoyen est mort (moins d'un PV), FALSE sinon */
     public boolean estMort() {
         if (this.pv < 1) {
             return true;
@@ -485,6 +504,7 @@ public class Citoyen {
         return false;
     }
 
+    /* Appelée à la fin du tour d'un Citoyen => Régénère 4 PA */
     public void finDeTour() {
         this.pa += 4;
         if (this.pa > this.MAX_PA) {

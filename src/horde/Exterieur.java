@@ -36,7 +36,31 @@ public class Exterieur extends Case {
         this.fouiller = false;
     }
 
-    /* Fouille une case */
+    
+    /* GENERATION */
+    
+    /* Ajoute une planche de bois sur la Case Exterieur (utilisée lors de la 
+    génération de la carte */
+    public void ajouterPlanche() {
+        this.nbPlanches++;
+    }
+    
+    /* Ajoute une plaque de métal sur la Case Exterieur (utilisée lors de la 
+    génération de la carte */
+    public void ajouterMetal() {
+        this.nbMetal++;
+    }
+
+    /* Ajoute une boisson énergisante sur la Case Exterieur (utilisée lors de la 
+    génération de la carte */
+    public void ajouterBoisson() {
+        this.nbBoissons++;
+    }
+    
+    
+    /* ACTIONS */
+    
+    /* Fouille une case => Retourne FALSE si la Case était déjà fouillée */
     public boolean fouiller() {
         if (this.fouiller) {
             System.out.println("Cette case a déjà été fouillée !!!");
@@ -48,19 +72,8 @@ public class Exterieur extends Case {
 
     }
 
-    public void ajouterPlanche() {
-        this.nbPlanches++;
-    }
-
-    public void ajouterMetal() {
-        this.nbMetal++;
-    }
-
-    public void ajouterBoisson() {
-        this.nbBoissons++;
-    }
-
-    /* Prend _qt Planches de la Case */
+    /* Prend _qt Planches de la Case => Retourne FALSE si il n'y a pas assez de 
+    Planches sur la Case */
     public boolean prendrePlanches(int _qt) {
         if (this.nbPlanches - _qt < 0) {
             System.out.println("Il n'y a que " + this.nbPlanches
@@ -73,7 +86,8 @@ public class Exterieur extends Case {
         }
     }
 
-    /* Prend _qt Metal de la Case */
+    /* Prend _qt Metal de la Case => Retourne FALSE si il n'y a pas assez de 
+    Metal sur la Case */
     public boolean prendreMetal(int _qt) {
         if (this.nbMetal - _qt < 0) {
             System.out.println("Il n'y a que " + this.nbMetal
@@ -86,7 +100,8 @@ public class Exterieur extends Case {
         }
     }
 
-    /* Prend _qt Boissons de la Case */
+    /* Prend _qt Boissons de la Case => Retourne FALSE si il n'y a pas assez de 
+    Boissons sur la Case */
     public boolean prendreBoissons(int _qt) {
         if (this.nbBoissons - _qt < 0) {
             System.out.println("Il n'y a que " + this.nbBoissons
@@ -99,7 +114,8 @@ public class Exterieur extends Case {
         }
     }
 
-    /* Attaque un Zombie => retourne VRAI si il a des zombie à attaquer */
+    /* Attaque un Zombie => retourne TRUE si il a des zombie à attaquer, et 
+    retire un zombie de la Case */
     public boolean attaquerZombie() {
         if (this.nbZombies == 0) {
             System.out.println("Il n'y a plus de zombies !!!");
@@ -110,11 +126,12 @@ public class Exterieur extends Case {
         }
     }
 
-    /* Test si il reste des zombies */
+    /* Retourne TRUE si il reste des zombies sur la Case */
     public boolean encoreZombies() {
         return !(this.nbZombies == 0);
     }
 
+    
     /* Retourne la case Exterieur sous la forme Case x, y : -Zombies = nbZombie
     (ajoute les items à la chaîne si la case Exterieur est fouillée)*/
     public String toString() {
@@ -128,6 +145,8 @@ public class Exterieur extends Case {
         return s;
     }
 
+    /* Retourne les items restants sur la Case sous forme d'une chaîne de 
+    caractères */
     public String getItems() {
         String s = "  -Items =\n";
         s += "    -Planches x" + this.nbPlanches + "\n";
