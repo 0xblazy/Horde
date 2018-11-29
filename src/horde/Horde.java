@@ -5,6 +5,7 @@
  */
 package horde;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -59,8 +60,10 @@ public class Horde {
         this.actionVille.add("3 - Prendre une ration");
         this.actionVille.add("4 - Boire au puit");
         this.actionVille.add("5 - Remplir une gourde");
-        //this.actionVille.add("Déposer planche");
-        this.actionVille.add("6 - Se déplacer");
+        this.actionVille.add("6 - Déposer des planches de bois");
+        this.actionVille.add("7 - Déposer des plaques de métal");
+        this.actionVille.add("8 - Déposer des boissons énergisantes");
+        this.actionVille.add("9 - Se déplacer");
 
         /* Actions Exterieur */
         this.actionExterieur.add("0 - Passer son tour");
@@ -243,12 +246,18 @@ public class Horde {
                 System.out.println(citoyenMort.getNom());
             }
             System.out.println("");
-
+            System.out.println("Pressez ENTRER pour continuer...");
+            this.pressEnter();
         }
 
         /* Fin de la partie, affiche le Citoyen gagnant */
         System.out.println("===== PARTIE TERMINEE =====");
-        System.out.println("Gagnant : " + this.citoyens.get(0).getNom());
+        if(this.citoyens.size() == 0) {
+            System.out.println("Aucun citoyen a survécu...");
+        } else {
+            System.out.println(this.citoyens.get(0).getNom() + " a gagné la "
+                    + "partie");
+        }
     }
 
     /* Gère les actions en Ville */
@@ -278,8 +287,21 @@ public class Horde {
             case 5 :
                 _citoyen.remplirGourde();
                 return true;
+            /* Déposer des planches */
+            case 6 :
+                _citoyen.deposerPlanches();
+                return true;
+            /* Déposer des plaques */
+            case 7 :
+                _citoyen.deposerMetal();
+                return true;
+            /* Déposer des boissons */
+            case 8 :
+                System.out.print("Nombre de boissons énergisantes : ");
+                _citoyen.deposerBoissons(this.sc.nextInt());
+                return true;
             /* Se déplacer */
-            case  6 :
+            case 9 :
                 System.out.println("Déplacement vers :");
                 System.out.println("  1 - Nord");
                 System.out.println("  2 - Sud");
@@ -371,4 +393,9 @@ public class Horde {
         }
     }
 
+    private void pressEnter(){
+        try {
+            System.in.read();
+        } catch(IOException e) {}
+    }
 }

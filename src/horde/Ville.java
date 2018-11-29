@@ -14,7 +14,7 @@ public class Ville extends Case {
     /* Booléen qui définit si la porte est ouerte ou non => FAUX par défaut */
     private boolean porteOuverte;
     /* Entrepôt */
-    private int nbPlanches, nbMetal, nbBoissons, nbRation;
+    private int nbPlanches, nbMetal, nbBoissons, nbRations;
     
     /* Constructeur */
     public Ville() {
@@ -23,7 +23,7 @@ public class Ville extends Case {
         this.nbPlanches = 0;
         this.nbMetal = 0;
         this.nbBoissons = 0;
-        this.nbRation = 50;
+        this.nbRations = 50;
         
         this.porteOuverte = false;
     }
@@ -55,19 +55,47 @@ public class Ville extends Case {
     /* Prendre une ration de l'entrepôt => Retourne FALSE si il n'y a plus de 
     ration dans l'entrepôt */
     public boolean prendreRation(){
-        if(this.nbRation == 0) {
+        if(this.nbRations == 0) {
             System.out.println("Il n'y a plus de ration dans l'entrepôt");
             return false;
         } else {
-            this.nbRation--;
-            System.out.println("Il reste " + this.nbRation + " rations");
+            this.nbRations--;
             return true;
         }
     }
     
+    /* Dépose des planches dans l'entrepot */
+    public void deposerPlanches(int _qt) {
+        this.nbPlanches += _qt;
+    }
     
+    /* Dépose du métal dans l'entrepot */
+    public void deposerMetal(int _qt) {
+        this.nbMetal += _qt;
+    }
+    
+    /* Dépose des boissons dans l'entrepot */
+    public void deposerBoissons(int _qt) {
+        this.nbBoissons += _qt;
+    }
+    
+    /* Retourne la case Ville sous la forme Ville : Porte OUVERTE/FERMÉE 
+    Entrepot */
     public String toString() {
-        return "En ville";
+        String s = "Ville :\n";
+        s += "  Porte ";
+        if(this.porteOuverte) {
+            s += "OUVERTE\n";
+        } else {
+            s += "FERMÉE\n";
+        }
+        s += "  Entrepot :\n";
+        s += "    - Planches de bois : " + this.nbPlanches + "\n";
+        s += "    - Plaques de métal : " + this.nbMetal + "\n";
+        s += "    - Boissons énergisantes : " + this.nbBoissons + "\n";
+        s += "    - Rations : " + this.nbRations;
+        
+        return s;
     }
     
     /* Retourne VRAI si la porte est ouverte */

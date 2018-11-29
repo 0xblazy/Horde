@@ -28,7 +28,7 @@ public class Citoyen {
     private final int TAILLE_SAC = 10;
     /* Variables contenants le nombre d'items que possède le joueur dans son
     inventaire (le total de doit pas être supérieur à TAILLE_SAC */
-    private int nbPlanche, nbMetal, nbBoissons, nbGourde, nbRation;
+    private int nbPlanches, nbMetal, nbBoissons, nbGourde, nbRation;
     /* Booleens passant à TRUE après avoir bu une gourde ou mangé une ration
     => Repasse à FALSE à la fin de la journée */
     private boolean aBu, aMange;
@@ -168,8 +168,6 @@ public class Citoyen {
     private boolean deplacerN() {
         this.y--;
         this.pa--;
-        System.out.println(this.nom + " a maintenant " + this.pa
-                + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
         return true;
     }
@@ -178,8 +176,6 @@ public class Citoyen {
     private boolean deplacerS() {
         this.y++;
         this.pa--;
-        System.out.println(this.nom + " a maintenant " + this.pa
-                + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
         return true;
     }
@@ -188,8 +184,6 @@ public class Citoyen {
     private boolean deplacerE() {
         this.x++;
         this.pa--;
-        System.out.println(this.nom + " a maintenant " + this.pa
-                + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
         return true;
     }
@@ -198,8 +192,6 @@ public class Citoyen {
     private boolean deplacerO() {
         this.x--;
         this.pa--;
-        System.out.println(this.nom + " a maintenant " + this.pa
-                + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
         return true;
     }
@@ -216,8 +208,6 @@ public class Citoyen {
         }
         if (((Ville) this.carte[12][12]).ouvrirPorte()) {
             this.pa--;
-            System.out.println(this.nom + " a maintenant " + this.pa
-                    + " PA");
             return true;
         } else {
             return false;
@@ -233,8 +223,6 @@ public class Citoyen {
         }
         if (((Ville) this.carte[12][12]).fermerPorte()) {
             this.pa--;
-            System.out.println(this.nom + " a maintenant " + this.pa
-                    + " PA");
             return true;
         } else {
             return false;
@@ -254,6 +242,7 @@ public class Citoyen {
         }
         if (((Ville) this.carte[12][12]).prendreRation()) {
             this.nbRation = 1;
+            System.out.println(this.nom + " prend une ration");
             return true;
         } else {
             return false;
@@ -266,8 +255,7 @@ public class Citoyen {
         if (this.pa > this.MAX_PA) {
             this.pa = this.MAX_PA;
         }
-        System.out.println(this.nom + " va au puit, il a maintenant "
-                + this.pa + " PA");
+        System.out.println(this.nom + " va boire au puit");
     }
 
     /* Remplis une goude et l'ajoute à l'inventaire */
@@ -284,7 +272,29 @@ public class Citoyen {
         this.nbGourde++;
         return true;
     }
-
+    
+    /* Dépose des planches dans l'entrepot */
+    public void deposerPlanches() {
+        ((Ville) this.carte[12][12]).deposerPlanches(this.nbPlanches);
+        this.nbPlanches = 0;
+    }
+    
+    /* Dépose du metal dans l'entrepot */
+    public void deposerMetal() {
+        ((Ville) this.carte[12][12]).deposerMetal(this.nbMetal);
+        this.nbMetal = 0;
+    }
+    
+    /* Dépose des boissons dans l'entrepot */
+    public void deposerBoissons(int _qt) {
+        if(this.nbBoissons < _qt) {
+            System.out.println(this.nom + " n'a que " + this.nbBoissons 
+                    + " dans son inventaire !");
+        } else {
+            ((Ville) this.carte[12][12]).deposerBoissons(_qt);
+            this.nbBoissons -= _qt;
+        }
+    }
     
     /* ACTIONS EXTERIEUR */
 
@@ -312,7 +322,7 @@ public class Citoyen {
             return false;
         }
         if (((Exterieur) this.carte[this.y][this.x]).prendrePlanches(_qt)) {
-            this.nbPlanche += _qt;
+            this.nbPlanches += _qt;
             return true;
         } else {
             return false;
@@ -360,14 +370,12 @@ public class Citoyen {
             this.pa--;
 
             if (Math.random() * 100 < 10) {
-                System.out.println(this.nom + " est blessé !");
+                System.out.println(this.nom + " est blessé ! Il perd 10 PV !");
                 this.pv -= 10;
-                System.out.println(this.nom + " a maintenant " + this.pv
-                        + " PV");
+            } else {
+                System.out.println(this.nom + " massacre le zombie sans une "
+                        + "égratignure");
             }
-            System.out.println(this.nom + " a maintenant " + this.pa
-                    + " PA");
-
             return true;
         }
         return false;
@@ -391,7 +399,7 @@ public class Citoyen {
             if (this.pa > this.MAX_PA) {
                 this.pa = this.MAX_PA;
             }
-            System.out.println(this.nom + " a maintenant " + this.pa + " PA");
+            System.out.println(this.nom + " mange une ration");
             return true;
         }
     }
@@ -414,7 +422,7 @@ public class Citoyen {
             if (this.pa > this.MAX_PA) {
                 this.pa = this.MAX_PA;
             }
-            System.out.println(this.nom + " a maintenant " + this.pa + " PA");
+            System.out.println(this.nom + " boit un gourde");
             return true;
         }
     }
@@ -438,10 +446,10 @@ public class Citoyen {
     /* Retourne l'inventaire du Citoyen sous la forme d'une chaîne de 
     caractère */
     public String getInventaire() {
-        String s = "  Inventaire (" + (this.nbPlanche + this.nbMetal
+        String s = "  Inventaire (" + (this.nbPlanches + this.nbMetal
                 + this.nbBoissons + this.nbGourde + this.nbRation)
                 + "/" + this.TAILLE_SAC + "):\n";
-        s += "    - Planches de bois : " + this.nbPlanche + "\n";
+        s += "    - Planches de bois : " + this.nbPlanches + "\n";
         s += "    - Plaques de métal : " + this.nbMetal + "\n";
         s += "    - Boissons énergisantes : " + this.nbBoissons + "\n";
         s += "    - Gourdes : " + this.nbGourde + "\n";
@@ -468,7 +476,7 @@ public class Citoyen {
     /* Retourne un entier correspondant au nombre d'emplacements restants dans
     l'inventaire */
     public int invRestant() {
-        return 10 - (this.nbPlanche + this.nbMetal + this.nbBoissons
+        return 10 - (this.nbPlanches + this.nbMetal + this.nbBoissons
                 + this.nbGourde + this.nbRation);
     }
 
