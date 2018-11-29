@@ -40,19 +40,19 @@ public class Exterieur extends Case {
     /* GENERATION */
     
     /* Ajoute une planche de bois sur la Case Exterieur (utilisée lors de la 
-    génération de la carte */
+    génération de la carte) */
     public void ajouterPlanche() {
         this.nbPlanches++;
     }
     
     /* Ajoute une plaque de métal sur la Case Exterieur (utilisée lors de la 
-    génération de la carte */
+    génération de la carte) */
     public void ajouterMetal() {
         this.nbMetal++;
     }
 
     /* Ajoute une boisson énergisante sur la Case Exterieur (utilisée lors de la 
-    génération de la carte */
+    génération de la carte) */
     public void ajouterBoisson() {
         this.nbBoissons++;
     }
@@ -81,7 +81,6 @@ public class Exterieur extends Case {
             return false;
         } else {
             this.nbPlanches -= _qt;
-            System.out.println(this.getItems());
             return true;
         }
     }
@@ -95,7 +94,6 @@ public class Exterieur extends Case {
             return false;
         } else {
             this.nbMetal -= _qt;
-            System.out.println(this.getItems());
             return true;
         }
     }
@@ -109,7 +107,6 @@ public class Exterieur extends Case {
             return false;
         } else {
             this.nbBoissons -= _qt;
-            System.out.println(this.getItems());
             return true;
         }
     }
@@ -136,10 +133,10 @@ public class Exterieur extends Case {
     (ajoute les items à la chaîne si la case Exterieur est fouillée)*/
     public String toString() {
         String s = "Case " + super.getX() + "," + super.getY() + " :\n";
-        s += "  -Zombies = " + this.nbZombies + "\n";
+        s += "  - Zombies = " + this.nbZombies;
 
         if (this.fouiller) {
-            s += this.getItems();
+            s += "\n" + this.getItems();
         }
 
         return s;
@@ -148,10 +145,10 @@ public class Exterieur extends Case {
     /* Retourne les items restants sur la Case sous forme d'une chaîne de 
     caractères */
     public String getItems() {
-        String s = "  -Items =\n";
-        s += "    -Planches x" + this.nbPlanches + "\n";
-        s += "    -Plaques de métal x" + this.nbMetal + "\n";
-        s += "    -Boissons énergisantes x" + this.nbBoissons + "\n";
+        String s = "  - Items =\n";
+        s += "    - Planches de bois x" + this.nbPlanches + "\n";
+        s += "    - Plaques de métal x" + this.nbMetal + "\n";
+        s += "    - Boissons énergisantes x" + this.nbBoissons;
 
         return s;
     }

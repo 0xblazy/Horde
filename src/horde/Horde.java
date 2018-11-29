@@ -157,12 +157,13 @@ public class Horde {
                 for (Citoyen citoyen : this.citoyens) {
 
                     System.out.println("Jour " + jour + " - Tour " + tour);
-                    System.out.println(citoyen);
+                    System.out.println("");
 
                     boolean continuer = true;
 
                     /* Tant que le Citoyen souhaite continuer à jouer */
                     while (continuer) {
+                        System.out.println(citoyen);
                         
                         /* Vérifie si le Citoyen est encore en vie (si il a 
                         encore des PV) */
@@ -171,10 +172,12 @@ public class Horde {
                             continuer = false;
                             this.citoyens.remove(citoyen);
                         } else {
-                            System.out.println("== ACTIONS ==");
                             /* Propose les actions disponibles en fonction de
                             l'emplacement du Citoyen */
                             if (citoyen.isEnVille()) {
+                                System.out.println((Ville) this.carte[12][12]);
+                                System.out.println("");
+                                System.out.println("== ACTIONS ==");
                                 for (String action : this.actionVille) {
                                     System.out.println("  " + action);
                                 }
@@ -182,6 +185,10 @@ public class Horde {
                                 continuer = this.actionVille(citoyen,
                                         this.sc.nextInt());
                             } else {
+                                System.out.println((Exterieur) this.carte
+                                        [citoyen.getY()][citoyen.getX()]);
+                                System.out.println("");
+                                System.out.println("== ACTIONS ==");
                                 for (String action : this.actionExterieur) {
                                     System.out.println("  " + action);
                                 }
@@ -190,8 +197,10 @@ public class Horde {
                                         this.sc.nextInt());
                             }
                         }
+                        System.out.println("");
                     }
                     citoyen.finDeTour();
+                    System.out.println("");
                 }
             }
 
@@ -218,7 +227,6 @@ public class Horde {
             if (nbZombie > ((Ville) this.carte[12][12]).defenses()) {
                 System.out.println("Les zombies ont réussi à passer les "
                         + "défenses de la ville...");
-
                 int nbVictimes = this.citoyens.size() / 2;
                 for (int i = 0; i < nbVictimes; i++) {
                     int a = this.ra.nextInt(this.citoyens.size());
@@ -226,6 +234,7 @@ public class Horde {
                     this.citoyens.remove(a);
                 }
             }
+            System.out.println("");
 
             /* Affiche le bilan de la nuit (nombre et liste des morts) */
             System.out.println("==== BILAN DE LA NUIT ====");
@@ -233,6 +242,7 @@ public class Horde {
             for (Citoyen citoyenMort : citoyensMorts) {
                 System.out.println(citoyenMort.getNom());
             }
+            System.out.println("");
 
         }
 
@@ -243,107 +253,95 @@ public class Horde {
 
     /* Gère les actions en Ville */
     private boolean actionVille(Citoyen _citoyen, int _action) {
-        /* Passer son tour */
-        if (_action == 0) {
-            System.out.println(_citoyen.getNom() + " passe son tour");
-            return false;
-        }
-        /* Ouvrir porte */
-        if (_action == 1) {
-            _citoyen.ouvrirPorte();
-            return true;
-        }
-        /* Fermer porte */
-        if (_action == 2) {
-            _citoyen.fermerPorte();
-            return true;
-        }
-        /* Prendre ration */
-        if (_action == 3) {
-            _citoyen.prendreRation();
-            return true;
-        }
-        /* Aller au puit */
-        if (_action == 4) {
-            _citoyen.allerAuPuit();
-            return true;
-        }
-        /* Remplir gourde */
-        if (_action == 5) {
-            _citoyen.remplirGourde();
-            return true;
-        }
-        /* Se déplacer */
-        if (_action == 6) {
-            System.out.println("Déplacement vers :");
-            System.out.println("  1 - Nord");
-            System.out.println("  2 - Sud");
-            System.out.println("  3 - Est");
-            System.out.println("  4 - Ouest");
-            System.out.print("Direction : ");
-            _citoyen.deplacer(this.sc.nextInt());
-            return true;
+        switch (_action) {
+            /* Passer son tour */
+            case 0 :
+                System.out.println(_citoyen.getNom() + " passe son tour");
+                return false;
+            /* Ouvrir porte */
+            case 1 :
+                _citoyen.ouvrirPorte();
+                return true;
+            /* Fermer porte */
+            case 2 :
+                _citoyen.fermerPorte();
+                return true;
+            /* Prendre ration */
+            case 3 :
+                _citoyen.prendreRation();
+                return true;
+            /* Aller au puit */
+            case 4 :
+                _citoyen.allerAuPuit();
+                return true;
+            /* Remplir gourde */
+            case 5 :
+                _citoyen.remplirGourde();
+                return true;
+            /* Se déplacer */
+            case  6 :
+                System.out.println("Déplacement vers :");
+                System.out.println("  1 - Nord");
+                System.out.println("  2 - Sud");
+                System.out.println("  3 - Est");
+                System.out.println("  4 - Ouest");
+                System.out.print("Direction : ");
+                _citoyen.deplacer(this.sc.nextInt());
+                return true; 
         }
         return true;
     }
 
     /* Gère les actions à l'Exterieur */
     private boolean actionExterieur(Citoyen _citoyen, int _action) {
-        /* Passer son tour */
-        if (_action == 0) {
-            System.out.println(_citoyen.getNom() + " passe son tour");
-            return false;
+        switch (_action) {
+            /* Passer son tour */
+            case 0 :
+                System.out.println(_citoyen.getNom() + " passe son tour");
+                return false;
+            /* Fouiller */
+            case 1 :
+                _citoyen.fouiller();
+                return true;
+            /* Récupérer planches */
+            case 2 :
+                System.out.print("Nombre de planches de bois : ");
+                _citoyen.prendrePlanches(this.sc.nextInt());
+                return true;
+            /* Récupérer plaques */
+            case 3 :
+                System.out.print("Nombre de plaques de métal : ");
+                _citoyen.prendreMetal(this.sc.nextInt());
+                return true;
+            /* Récupérer boissons */
+            case 4 :
+                System.out.print("Nombre de boissons énergisantes : ");
+                _citoyen.prendreBoissons(this.sc.nextInt());
+                return true;
+            /* Attaquer zombies */
+            case 5 :
+                _citoyen.attaquerZombie();
+                return true;
+            /* Manger une ration */
+            case 6 :
+                _citoyen.mangerRation();
+                return true;
+            /* Boire une goude */
+            case 7 :
+                _citoyen.boireGourde();
+                return true;
+            /* Se déplacer */
+            case 9 :
+                System.out.println("Déplacement vers :");
+                System.out.println("  1 - Nord");
+                System.out.println("  2 - Sud");
+                System.out.println("  3 - Est");
+                System.out.println("  4 - Ouest");
+                System.out.print("Direction : ");
+                _citoyen.deplacer(this.sc.nextInt());
+                return true;
         }
-        /* Fouiller */
-        if (_action == 1) {
-            _citoyen.fouiller();
-            return true;
-        }
-        /* Récupérer planches */
-        if (_action == 2) {
-            System.out.print("Nombre de planches de bois : ");
-            _citoyen.prendrePlanches(this.sc.nextInt());
-            return true;
-        }
-        /* Récupérer plaques */
-        if (_action == 3) {
-            System.out.print("Nombre de plaques de métal : ");
-            _citoyen.prendreMetal(this.sc.nextInt());
-            return true;
-        }
-        /* Récupérer boissons */
-        if (_action == 4) {
-            System.out.print("Nombre de boissons énergisantes : ");
-            _citoyen.prendreBoissons(this.sc.nextInt());
-            return true;
-        }
-        /* Attaquer zombies */
-        if (_action == 5) {
-            _citoyen.attaquerZombie();
-            return true;
-        }
-        /* Manger une ration */
-        if (_action == 6) {
-            _citoyen.mangerRation();
-            return true;
-        }
-        /* Boire une goude */
-        if (_action == 7) {
-            _citoyen.boireGourde();
-            return true;
-        }
-        /* Se déplacer */
-        if (_action == 9) {
-            System.out.println("Déplacement vers :");
-            System.out.println("  1 - Nord");
-            System.out.println("  2 - Sud");
-            System.out.println("  3 - Est");
-            System.out.println("  4 - Ouest");
-            System.out.print("Direction : ");
-            _citoyen.deplacer(this.sc.nextInt());
-            return true;
-        }
-        return false;
+        return true;
     }
 
     /* Retourne la liste de Citoyen */

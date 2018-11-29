@@ -59,7 +59,7 @@ public class Citoyen {
         }
 
         /* Vérifie si la porte est ouverte ou si il reste des zombies sur la 
-        case */
+        Case */
         if (this.enVille) {
             if (!((Ville) this.carte[12][12]).porteOuverte()) {
                 System.out.println("La porte de la ville est fermée" + this.nom
@@ -168,11 +168,6 @@ public class Citoyen {
     private boolean deplacerN() {
         this.y--;
         this.pa--;
-        if (this.carte[this.y][this.x] instanceof Exterieur) {
-            System.out.println((Exterieur) this.carte[this.y][this.x]);
-        } else {
-            System.out.println("En ville");
-        }
         System.out.println(this.nom + " a maintenant " + this.pa
                 + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
@@ -183,11 +178,6 @@ public class Citoyen {
     private boolean deplacerS() {
         this.y++;
         this.pa--;
-        if (this.carte[this.y][this.x] instanceof Exterieur) {
-            System.out.println((Exterieur) this.carte[this.y][this.x]);
-        } else {
-            System.out.println("En ville");
-        }
         System.out.println(this.nom + " a maintenant " + this.pa
                 + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
@@ -198,11 +188,6 @@ public class Citoyen {
     private boolean deplacerE() {
         this.x++;
         this.pa--;
-        if (this.carte[this.y][this.x] instanceof Exterieur) {
-            System.out.println((Exterieur) this.carte[this.y][this.x]);
-        } else {
-            System.out.println("En ville");
-        }
         System.out.println(this.nom + " a maintenant " + this.pa
                 + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
@@ -213,11 +198,6 @@ public class Citoyen {
     private boolean deplacerO() {
         this.x--;
         this.pa--;
-        if (this.carte[this.y][this.x] instanceof Exterieur) {
-            System.out.println((Exterieur) this.carte[this.y][this.x]);
-        } else {
-            System.out.println("En ville");
-        }
         System.out.println(this.nom + " a maintenant " + this.pa
                 + " PA");
         this.enVille = (this.x == 12 && this.y == 12);
@@ -274,7 +254,6 @@ public class Citoyen {
         }
         if (((Ville) this.carte[12][12]).prendreRation()) {
             this.nbRation = 1;
-            System.out.println(this.getInventaire());
             return true;
         } else {
             return false;
@@ -303,7 +282,6 @@ public class Citoyen {
             return false;
         }
         this.nbGourde++;
-        System.out.println(this.getInventaire());
         return true;
     }
 
@@ -319,8 +297,6 @@ public class Citoyen {
         }
         if (((Exterieur) this.carte[this.y][this.x]).fouiller()) {
             this.pa--;
-            System.out.println(((Exterieur) this.carte[this.y][this.x])
-                    .getItems());
             System.out.println(this.nom + " a maintenant " + this.pa
                     + " PA");
             return true;
@@ -337,7 +313,6 @@ public class Citoyen {
         }
         if (((Exterieur) this.carte[this.y][this.x]).prendrePlanches(_qt)) {
             this.nbPlanche += _qt;
-            System.out.println(this.getInventaire());
             return true;
         } else {
             return false;
@@ -352,7 +327,6 @@ public class Citoyen {
         }
         if (((Exterieur) this.carte[this.y][this.x]).prendreMetal(_qt)) {
             this.nbMetal += _qt;
-            System.out.println(this.getInventaire());
             return true;
         } else {
             return false;
@@ -367,7 +341,6 @@ public class Citoyen {
         }
         if (((Exterieur) this.carte[this.y][this.x]).prendreBoissons(_qt)) {
             this.nbBoissons += _qt;
-            System.out.println(this.getInventaire());
             return true;
         } else {
             return false;
@@ -418,7 +391,6 @@ public class Citoyen {
             if (this.pa > this.MAX_PA) {
                 this.pa = this.MAX_PA;
             }
-            System.out.println(this.getInventaire());
             System.out.println(this.nom + " a maintenant " + this.pa + " PA");
             return true;
         }
@@ -442,7 +414,6 @@ public class Citoyen {
             if (this.pa > this.MAX_PA) {
                 this.pa = this.MAX_PA;
             }
-            System.out.println(this.getInventaire());
             System.out.println(this.nom + " a maintenant " + this.pa + " PA");
             return true;
         }
@@ -474,7 +445,7 @@ public class Citoyen {
         s += "    - Plaques de métal : " + this.nbMetal + "\n";
         s += "    - Boissons énergisantes : " + this.nbBoissons + "\n";
         s += "    - Gourdes : " + this.nbGourde + "\n";
-        s += "    - Rations : " + this.nbRation + "\n";
+        s += "    - Rations : " + this.nbRation;
 
         return s;
     }
@@ -482,6 +453,16 @@ public class Citoyen {
     /* Retourne le nom du Citoyen */
     public String getNom() {
         return this.nom;
+    }
+
+    /* Retourne la coordonnée X du Citoyen */
+    public int getX() {
+        return this.x;
+    }
+
+    /* Retourne la coordonnée Y du Citoyen */
+    public int getY() {
+        return this.y;
     }
 
     /* Retourne un entier correspondant au nombre d'emplacements restants dans

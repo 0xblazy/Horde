@@ -65,6 +65,11 @@ public class Ville extends Case {
         }
     }
     
+    
+    public String toString() {
+        return "En ville";
+    }
+    
     /* Retourne VRAI si la porte est ouverte */
     public boolean porteOuverte(){
         return this.porteOuverte;
