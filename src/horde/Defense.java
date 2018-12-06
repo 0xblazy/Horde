@@ -17,6 +17,31 @@ public class Defense {
     private int nbZombie;
     private boolean active;
     
+    public static enum Defenses {
+        MUR("Mur d'enceinte", 20, 5, 10 , 20),
+        FILS("Fils barbelés", 20, 30, 20, 30),
+        FOSSES("Fosses à zombies", 50, 25, 30, 50),
+        MINES("Mines autour de la ville", 10, 50, 30, 50),
+        PORTES("Portes blindées", 50, 50, 40, 100),
+        MIRADORS("Miradors avec mitrailleuses automatiques", 75, 75, 50, 200),
+        ABRIS("Abris anti-atomique", 100, 200, 60, 500);
+        
+        public final String nom;
+        public final int nbPlanches;
+        public final int nbMetal;
+        public final int nbPA;
+        public final int nbZombies;
+        
+        Defenses(String _nom, int _nbPlanche, int _nbMetal, int _nbPA ,
+                int _nbZombies) {
+            this.nom = _nom;
+            this.nbPlanches = _nbPlanche;
+            this.nbMetal = _nbMetal;
+            this.nbPA = _nbPA;
+            this.nbZombies = _nbZombies;
+        }
+    }
+    
     public Defense(String _nom, int _nbPlanche, int _nbMetal, int _nbPA, 
             int _nbZombie) {
         this.nom = _nom;
@@ -37,6 +62,18 @@ public class Defense {
             return false;
         }
     }
+    
+    public String toString() {
+        String s = this.nom + " [";
+        
+        if (this.active) {
+            s += "Active]";
+        } else {
+            s += this.nbPA + " restants]";
+        }
+        
+        return s;
+    }
 
     public int getNbMetal() {
         return nbMetal;
@@ -48,5 +85,9 @@ public class Defense {
 
     public int getNbZombie() {
         return nbZombie;
-    }    
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
 }

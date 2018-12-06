@@ -63,7 +63,8 @@ public class Horde {
         this.actionVille.add("6 - Déposer des planches de bois");
         this.actionVille.add("7 - Déposer des plaques de métal");
         this.actionVille.add("8 - Déposer des boissons énergisantes");
-        this.actionVille.add("9 - Se déplacer");
+        this.actionVille.add("9 - Accéder aux défenses");
+        this.actionVille.add("10 - Se déplacer");
 
         /* Actions Exterieur */
         this.actionExterieur.add("0 - Passer son tour");
@@ -185,8 +186,17 @@ public class Horde {
                                     System.out.println("  " + action);
                                 }
                                 System.out.print("Action : ");
+                                int action = this.scanner();
+                                
+                                while (action < 0 || action > this.actionVille
+                                        .size() - 1) {
+                                    System.out.print("Saisie incorrecte, "
+                                            + "ressaisissez un nombre :  ");
+                                    action = this.scanner();
+                                }
+                                
                                 continuer = this.actionVille(citoyen,
-                                        this.sc.nextInt());
+                                        action);
                             } else {
                                 System.out.println((Exterieur) this.carte
                                         [citoyen.getY()][citoyen.getX()]);
@@ -196,8 +206,17 @@ public class Horde {
                                     System.out.println("  " + action);
                                 }
                                 System.out.print("Action : ");
+                                int action = this.scanner();
+                                
+                                while (action < 0 || action > 
+                                        this.actionExterieur.size() - 1) {
+                                    System.out.print("Saisie incorrecte, "
+                                            + "ressaisissez un nombre :  ");
+                                    action = this.scanner();
+                                }
+                                
                                 continuer = this.actionExterieur(citoyen,
-                                        this.sc.nextInt());
+                                        action);
                             }
                         }
                         System.out.println("");
@@ -298,18 +317,53 @@ public class Horde {
             /* Déposer des boissons */
             case 8 :
                 System.out.print("Nombre de boissons énergisantes : ");
-                _citoyen.deposerBoissons(this.sc.nextInt());
+                _citoyen.deposerBoissons(this.scanner());
                 return true;
-            /* Se déplacer */
+            /* Menu des défenses */
             case 9 :
+                System.out.println(((Ville)this.carte[12][12]).listDef());
+                System.out.print("Choisissez la défense : ");
+                int action = this.scanner();
+                while (action < -1 || action > ((Ville)this.carte[12][12])
+                        .nbDef()) {
+                    System.out.print("Saisie incorrecte, "
+                             + "ressaisissez un nombre :  ");
+                    action = this.scanner();
+                }
+                
+                if (action == -1) {
+                    System.out.println("Sortie du menu des Défenses");
+                    return true;
+                } else if (action == 0) {
+                    return true;
+                } else {
+                    return true;
+                }
+            /* Se déplacer */
+            case 10 :
                 System.out.println("Déplacement vers :");
+                System.out.println("  0 - Annuler");
                 System.out.println("  1 - Nord");
                 System.out.println("  2 - Sud");
                 System.out.println("  3 - Est");
                 System.out.println("  4 - Ouest");
                 System.out.print("Direction : ");
-                _citoyen.deplacer(this.sc.nextInt());
-                return true; 
+                
+                int dir = this.scanner();
+                
+                while (dir < 0 || dir > 4) {
+                    System.out.print("Saisie incorrecte, "
+                             + "ressaisissez un nombre :  ");
+                    dir = this.scanner();
+                }
+                
+                if (dir == 0) {
+                    System.out.println("Déplacement annulé");
+                    return true;
+                } else {
+                    _citoyen.deplacer(dir);
+                    return true;
+                }
         }
         return true;
     }
@@ -328,17 +382,17 @@ public class Horde {
             /* Récupérer planches */
             case 2 :
                 System.out.print("Nombre de planches de bois : ");
-                _citoyen.prendrePlanches(this.sc.nextInt());
+                _citoyen.prendrePlanches(this.scanner());
                 return true;
             /* Récupérer plaques */
             case 3 :
                 System.out.print("Nombre de plaques de métal : ");
-                _citoyen.prendreMetal(this.sc.nextInt());
+                _citoyen.prendreMetal(this.scanner());
                 return true;
             /* Récupérer boissons */
             case 4 :
                 System.out.print("Nombre de boissons énergisantes : ");
-                _citoyen.prendreBoissons(this.sc.nextInt());
+                _citoyen.prendreBoissons(this.scanner());
                 return true;
             /* Attaquer zombies */
             case 5 :
@@ -355,13 +409,28 @@ public class Horde {
             /* Se déplacer */
             case 9 :
                 System.out.println("Déplacement vers :");
+                System.out.println("  0 - Annuler");
                 System.out.println("  1 - Nord");
                 System.out.println("  2 - Sud");
                 System.out.println("  3 - Est");
                 System.out.println("  4 - Ouest");
                 System.out.print("Direction : ");
-                _citoyen.deplacer(this.sc.nextInt());
-                return true;
+                
+                int dir = this.scanner();
+                
+                while (dir < 0 || dir > 4) {
+                    System.out.print("Saisie incorrecte, "
+                             + "ressaisissez un nombre :  ");
+                    dir = this.scanner();
+                }
+                
+                if (dir == 0) {
+                    System.out.println("Déplacement annulé");
+                    return true;
+                } else {
+                    _citoyen.deplacer(dir);
+                    return true;
+                }  
         }
         return true;
     }
@@ -391,6 +460,24 @@ public class Horde {
             }
             System.out.println("|");
         }
+    }
+    
+    /* Protection du Scanner (saisie obligatoire d'un int */
+    private int scanner() {
+        int n = -1;
+        boolean valid = false;
+        
+        do {
+            if(this.sc.hasNextInt()) {
+                n = this.sc.nextInt();
+                valid = true;
+            } else {
+                System.out.print("Veuillez saisir un nombre ! ");
+                this.sc.next();
+            }
+        } while(!valid);
+        
+        return n;
     }
 
     private void pressEnter(){

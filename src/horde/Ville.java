@@ -5,6 +5,8 @@
  */
 package horde;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author nK_BlaZy
@@ -15,6 +17,8 @@ public class Ville extends Case {
     private boolean porteOuverte;
     /* Entrepôt */
     private int nbPlanches, nbMetal, nbBoissons, nbRations;
+    /* Liste des défenses */
+    private ArrayList<Defense> defenses;
     
     /* Constructeur */
     public Ville() {
@@ -26,6 +30,12 @@ public class Ville extends Case {
         this.nbRations = 50;
         
         this.porteOuverte = false;
+        
+        this.defenses = new ArrayList<>();
+        
+        this.defenses.add(new Defense("Yolo", 0, 0, 1, 0));
+        this.defenses.get(0).contruire();
+        this.defenses.add(new Defense(Defense.Defenses.ABRIS.nom, Defense.Defenses.ABRIS.nbPlanches, Defense.Defenses.ABRIS.nbMetal, Defense.Defenses.ABRIS.nbPA, Defense.Defenses.ABRIS.nbZombies));
     }
     
     /* Ouvre la porte => Retourne FALSE si elle était déjà ouverte */
@@ -106,7 +116,35 @@ public class Ville extends Case {
     /* Retourne le nombre de zombie auquel la ville peut résister (20 + la 
     défense des Contructions) */
     public int defenses() {
-        return 20;
+        int def = 20;
+        
+        for(Defense defense : this.defenses) {
+            if (defense.isActive()) {
+                def += defense.getNbZombie();
+            }
+        }                
+                
+        return def;
+    }
+    
+    /* Retourne la liste des Defense sous forme d'une chaîne de caractère */
+    public String listDef() {
+        String s = "=== DEFENSES ===\n";
+        
+        s += "0 - Nouvelle construction\n";
+        
+        for (Defense defense : this.defenses) {
+            s += (this.defenses.indexOf(defense) + 1) + " - " + defense + "\n";
+        }
+        
+        s += "-1 - Annuler\n";
+        
+        return s;
+    }
+    
+    /* Retourne le nombre de Defense de la Ville */
+    public int nbDef() {
+        return this.defenses.size();
     }
     
     public String affichageSimple() {
