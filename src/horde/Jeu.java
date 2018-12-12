@@ -18,8 +18,6 @@ public class Jeu {
         
         horde.init();
         
-        horde.afficherCarte();
-        
         horde.jouer();
         
     }

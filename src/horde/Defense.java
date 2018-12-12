@@ -42,21 +42,32 @@ public class Defense {
         }
     }
     
-    public Defense(String _nom, int _nbPlanche, int _nbMetal, int _nbPA, 
-            int _nbZombie) {
-        this.nom = _nom;
-        this.nbPlanche = _nbPlanche;
-        this.nbMetal = _nbMetal;
-        this.nbPA = _nbPA;
-        this.nbZombie = _nbZombie;
+    public Defense(int _id) {
+        this.nom = Defenses.values()[_id].nom;
+        this.nbPlanche = Defenses.values()[_id].nbPlanches;
+        this.nbMetal = Defenses.values()[_id].nbMetal;
+        this.nbPA = Defenses.values()[_id].nbPA;
+        this.nbZombie = Defenses.values()[_id].nbZombies;
         this.active = false;
     }
     
-    public boolean contruire() {
+    public boolean contruire(int _pa) {
         if(!this.active) {
-            this.nbPA --;
-            this.active = (this.nbPA == 0);
-            return true;
+            if(this.nbPA - _pa < 0) {
+                System.out.println("Il suffit de " + this.nbPA + " PA pour achever"
+                        + " la construction");
+                return false;
+            } else {
+                this.nbPA -= _pa;
+                this.active = (this.nbPA == 0);
+                if (this.active) {
+                    System.out.println("La défense est maintenant active");
+                } else {
+                    System.out.println("Il reste " + this.nbPA + " PA pour "
+                            + "achever la construction");
+                }
+                return true;
+            }
         } else {
             System.out.println(this.nom + " déjà construit !!");
             return false;
@@ -69,8 +80,23 @@ public class Defense {
         if (this.active) {
             s += "Active]";
         } else {
-            s += this.nbPA + " restants]";
+            s += this.nbPA + " PA restants]";
         }
+        
+        return s;
+    }
+    
+    public static String listeDefenses() {
+        String s = "";
+        int i = 1;
+        for (Defenses def : Defenses.values()) {
+            s += i + " - " + def.nom + " [" + def.nbPlanches + " Planches, " + 
+                    def.nbMetal + " Metal, " + def.nbPA + " PA, " + 
+                    def.nbZombies + " Zombies]\n";
+            i++;
+        }
+        
+        s += "-1 - Annuler";
         
         return s;
     }

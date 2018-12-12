@@ -24,18 +24,14 @@ public class Ville extends Case {
     public Ville() {
         super(12, 12);
         
-        this.nbPlanches = 0;
-        this.nbMetal = 0;
+        this.nbPlanches = 100;
+        this.nbMetal = 100;
         this.nbBoissons = 0;
         this.nbRations = 50;
         
         this.porteOuverte = false;
         
         this.defenses = new ArrayList<>();
-        
-        this.defenses.add(new Defense("Yolo", 0, 0, 1, 0));
-        this.defenses.get(0).contruire();
-        this.defenses.add(new Defense(Defense.Defenses.ABRIS.nom, Defense.Defenses.ABRIS.nbPlanches, Defense.Defenses.ABRIS.nbMetal, Defense.Defenses.ABRIS.nbPA, Defense.Defenses.ABRIS.nbZombies));
     }
     
     /* Ouvre la porte => Retourne FALSE si elle était déjà ouverte */
@@ -87,6 +83,27 @@ public class Ville extends Case {
     /* Dépose des boissons dans l'entrepot */
     public void deposerBoissons(int _qt) {
         this.nbBoissons += _qt;
+    }
+    
+    /* Construit une défense */
+    public boolean construire(int _id, int _pa) {
+        return this.defenses.get(_id).contruire(_pa);
+    }
+    
+    /* Construit une nouvelle défense */
+    public boolean nouvelleDefense(int _id){
+        if (Defense.Defenses.values()[_id].nbPlanches < this.nbPlanches 
+                && Defense.Defenses.values()[_id].nbMetal < this.nbMetal) {
+            this.nbPlanches -= Defense.Defenses.values()[_id].nbPlanches;
+            this.nbMetal -= Defense.Defenses.values()[_id].nbMetal;
+            
+            this.defenses.add(new Defense(_id));
+            this.defenses.get(this.defenses.size() - 1).contruire(1);
+            return true;
+        } else {
+            System.out.println("Pas assez de ressources dans l'entrepôt !");
+            return false;
+        }
     }
     
     /* Retourne la case Ville sous la forme Ville : Porte OUVERTE/FERMÉE 
@@ -145,9 +162,5 @@ public class Ville extends Case {
     /* Retourne le nombre de Defense de la Ville */
     public int nbDef() {
         return this.defenses.size();
-    }
-    
-    public String affichageSimple() {
-        return "   VILLE   ";
     }
 }

@@ -296,6 +296,30 @@ public class Citoyen {
         }
     }
     
+    /* Contruit une défense */
+    public void construire(int _id, int _pa) {
+        if (this.pa == 0) {
+            System.out.println(this.nom + " n'a plus de point d'action !");
+        } else if(this.pa - _pa < 0) {
+            System.out.println(this.nom + " n'a pas assez de point d'action !");
+        } else if(((Ville) this.carte[12][12]).construire(_id, _pa)) {
+            this.pa -= _pa;
+            System.out.println(this.nom + " a maintenant " + this.pa
+                    + " PA");
+        }
+    }
+    
+    /* Contruit une nouvelle défense */
+    public void nouvelleDefense(int _id) {
+        if (this.pa == 0) {
+            System.out.println(this.nom + " n'a plus de point d'action !");
+        } else if(((Ville) this.carte[12][12]).nouvelleDefense(_id)) {
+            this.pa --;
+            System.out.println(this.nom + " a maintenant " + this.pa
+                    + " PA");
+        }
+    }
+    
     /* ACTIONS EXTERIEUR */
 
     /* Fouille la Case Exterieur sur laquelle est le Citoyen */

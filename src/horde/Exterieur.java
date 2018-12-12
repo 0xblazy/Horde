@@ -163,8 +163,10 @@ public class Exterieur extends Case {
         return s;
     }
 
-    public String affichageSimple() {
-        return "Z" + this.nbZombies + " P" + this.nbPlanches + " M"
-                + this.nbMetal + " B" + this.nbBoissons;
+    /* Retourne vrai si la case est fouiller */
+    public boolean isFouiller() {
+        return this.fouiller;
     }
+    
+    
 }

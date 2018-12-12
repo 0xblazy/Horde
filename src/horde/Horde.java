@@ -167,6 +167,8 @@ public class Horde {
 
                     /* Tant que le Citoyen souhaite continuer à jouer */
                     while (continuer) {
+                        this.afficherCarte();
+                        
                         System.out.println(citoyen);
                         
                         /* Vérifie si le Citoyen est encore en vie (si il a 
@@ -208,8 +210,7 @@ public class Horde {
                                 System.out.print("Action : ");
                                 int action = this.scanner();
                                 
-                                while (action < 0 || action > 
-                                        this.actionExterieur.size() - 1) {
+                                while (action < 0 || action > this.actionExterieur.size()) {
                                     System.out.print("Saisie incorrecte, "
                                             + "ressaisissez un nombre :  ");
                                     action = this.scanner();
@@ -335,8 +336,29 @@ public class Horde {
                     System.out.println("Sortie du menu des Défenses");
                     return true;
                 } else if (action == 0) {
+                    System.out.println(Defense.listeDefenses());
+                    System.out.print("Defense : ");
+                    int def = this.scanner();
+                    while (def < -1 || def == 0 || def > 7) {
+                        System.out.print("Saisie incorrecte, "
+                             + "ressaisissez un nombre :  ");
+                        def= this.scanner();
+                    }
+                    if (def == -1) {
+                        System.out.println("Sortie du menu des Défenses");
+                        return true;
+                    }
+                    _citoyen.nouvelleDefense(def - 1);
                     return true;
                 } else {
+                    System.out.print("Nombre de PA : ");
+                    int pa = this.scanner();
+                    while (pa < 0 || pa > 10 ) {
+                        System.out.print("Saisie incorrecte, "
+                             + "ressaisissez un nombre :  ");
+                        pa = this.scanner();
+                    }
+                    _citoyen.construire(action - 1, pa);
                     return true;
                 }
             /* Se déplacer */
@@ -434,31 +456,20 @@ public class Horde {
         }
         return true;
     }
-
-    /* Retourne la liste de Citoyen */
-    public ArrayList<Citoyen> getCitoyens() {
-        return citoyens;
-    }
-
-    /* Retourne le Citoyen en _i */
-    public Citoyen getCitoyenAtI(int _i) {
-        return this.citoyens.get(_i);
-    }
     
-    /* Affiche toute la carte => Simple vérification */
-    public void afficherCarte() {
+    /* Affiche toute la carte */
+    private void afficherCarte() {
         for (int j = 0; j < 25; j++) {
             for (int i = 0; i < 25; i++) {
                 if (i == 12 && j == 12) {
-                    System.out.print("| "
-                            + ((Ville) carte[j][i]).affichageSimple() + " ");
+                    System.out.print("@@@");
+                } else if (((Exterieur) this.carte[j][i]).isFouiller()){
+                    System.out.print("   ");
                 } else {
-                    System.out.print("| "
-                            + ((Exterieur) carte[j][i])
-                                    .affichageSimple() + " ");
+                    System.out.print("-#-");
                 }
             }
-            System.out.println("|");
+            System.out.println();
         }
     }
     
