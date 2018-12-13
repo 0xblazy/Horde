@@ -13,6 +13,9 @@ public class Citoyen {
 
     /* Carte de la partie à laquelle participe le Citoyen */
     private Case[][] carte;
+    
+    /* Talkie */
+    private Talkie talkie;
 
     private String nom;
     private int pv, pa;
@@ -32,10 +35,16 @@ public class Citoyen {
     /* Booleens passant à TRUE après avoir bu une gourde ou mangé une ration
     => Repasse à FALSE à la fin de la journée */
     private boolean aBu, aMange;
+    /* Booleen passant à vrai après avoir bu une boisson énergisante */
+    private boolean accroc;
+    /* Compteur pour le besoin en boisson énergisante */
+    private int dose; 
 
     /* Contructeur */
-    public Citoyen(String _nom, Case[][] _carte) {
+    public Citoyen(String _nom, Case[][] _carte, Talkie _talkie) {
         this.carte = _carte;
+        
+        this.talkie = _talkie;
 
         this.nom = _nom;
         this.pv = 100;
@@ -44,6 +53,17 @@ public class Citoyen {
         this.x = 12;
         this.y = 12;
         this.enVille = true;
+        
+        this.nbPlanches = 0;
+        this.nbMetal = 0;
+        this.nbBoissons = 0;
+        this.nbGourde = 0;
+        this.nbRation = 0;
+        
+        this.aBu = false;
+        this.aMange = false;
+        
+        this.accroc = false;
     }
 
     
@@ -196,6 +216,62 @@ public class Citoyen {
         return true;
     }
 
+    /* BOIRE/MANGER */
+    
+    /* Permet de récupérer 6 PA en mangeant une ration */
+    public void mangerRation() {
+        if (this.aMange) {
+            System.out.println(this.nom + " a déjà mangé une ration "
+                    + "aujourd'hui");
+        } else if (this.nbRation == 0) {
+            System.out.println(this.nom + " n'a plus de ration dans son "
+                    + "inventaire");
+        } else {
+            this.nbRation = 0;
+            this.aMange = true;
+            this.pa += 6;
+            if (this.pa > this.MAX_PA) {
+                this.pa = this.MAX_PA;
+            }
+            System.out.println(this.nom + " mange une ration");
+        }
+    }
+
+    /* Permet de récupérer 6 PA en buvant une gourde */
+    public void boireGourde() {
+        if (this.aBu) {
+            System.out.println(this.nom + " a déjà bu une gourde "
+                    + "aujourd'hui");
+        } else if (this.nbGourde == 0) {
+            System.out.println(this.nom + " n'a plus de gourde dans son "
+                    + "inventaire");
+        } else {
+            this.nbGourde = 0;
+            this.aBu = true;
+            this.pa += 6;
+            if (this.pa > this.MAX_PA) {
+                this.pa = this.MAX_PA;
+            }
+            System.out.println(this.nom + " boit un gourde");
+        }
+    }
+    
+    /* Permet de récupérer 4 PA en buvant une boisson énergisante */
+    public void boireBoisson() {
+        if (this.nbBoissons == 0) {
+            System.out.println(this.nom + " n'a plus de boissons énergisantes "
+                    + "dans son inventaire");
+        } else {
+            this.nbBoissons --;
+            this.pa += 4;
+            if (this.pa > this.MAX_PA) {
+                this.pa = this.MAX_PA;
+            }
+            this.accroc = true;
+            this.dose = 3;
+            System.out.println(this.nom + " boit une boisson énergisante");
+        }
+    }
     
     /* ACTIONS EN VILLE */
     
@@ -259,18 +335,15 @@ public class Citoyen {
     }
 
     /* Remplis une goude et l'ajoute à l'inventaire */
-    public boolean remplirGourde() {
+    public void remplirGourde() {
         if (this.invRestant() == 0) {
             System.out.println("Il n'y plus de place dans l'inventaire");
-            return false;
-        }
-        if (this.nbGourde == 1) {
+        } else if (this.nbGourde == 1) {
             System.out.println(this.nom + " a déjà une gourde dans son "
                     + "inventaire");
-            return false;
+        } else {
+            this.nbGourde++; 
         }
-        this.nbGourde++;
-        return true;
     }
     
     /* Dépose des planches dans l'entrepot */
@@ -323,73 +396,49 @@ public class Citoyen {
     /* ACTIONS EXTERIEUR */
 
     /* Fouille la Case Exterieur sur laquelle est le Citoyen */
-    public boolean fouiller() {
+    public void fouiller() {
         /* Vérifie si le Citoyen n'a plus de PA */
         if (this.pa == 0) {
             System.out.println(this.nom + " n'a plus de point d'action !");
-            return false;
-        }
-        if (((Exterieur) this.carte[this.y][this.x]).fouiller()) {
+        } else if (((Exterieur) this.carte[this.y][this.x]).fouiller()) {
             this.pa--;
             System.out.println(this.nom + " a maintenant " + this.pa
                     + " PA");
-            return true;
-        } else {
-            return false;
         }
     }
 
     /* Prend _qt planches s'il y a assez de place dans l'inventaire */
-    public boolean prendrePlanches(int _qt) {
+    public void prendrePlanches(int _qt) {
         if (this.invRestant() - _qt < 0) {
             System.out.println("Il n'y a pas assez de place dans l'inventaire");
-            return false;
-        }
-        if (((Exterieur) this.carte[this.y][this.x]).prendrePlanches(_qt)) {
+        } else if (((Exterieur) this.carte[this.y][this.x]).prendrePlanches(_qt)) {
             this.nbPlanches += _qt;
-            return true;
-        } else {
-            return false;
         }
     }
 
     /* Prend _qt plaques s'il y a assez de place dans l'inventaire */
-    public boolean prendreMetal(int _qt) {
+    public void prendreMetal(int _qt) {
         if (this.invRestant() - _qt < 0) {
             System.out.println("Il n'y a pas assez de place dans l'inventaire");
-            return false;
-        }
-        if (((Exterieur) this.carte[this.y][this.x]).prendreMetal(_qt)) {
+        } else if (((Exterieur) this.carte[this.y][this.x]).prendreMetal(_qt)) {
             this.nbMetal += _qt;
-            return true;
-        } else {
-            return false;
-        }
+        } 
     }
 
     /* Prend _qt boisson s'il y a assez de place dans l'inventaire */
-    public boolean prendreBoissons(int _qt) {
+    public void prendreBoissons(int _qt) {
         if (this.invRestant() - _qt < 0) {
             System.out.println("Il n'y a pas assez de place dans l'inventaire");
-            return false;
-        }
-        if (((Exterieur) this.carte[this.y][this.x]).prendreBoissons(_qt)) {
+        } else if (((Exterieur) this.carte[this.y][this.x]).prendreBoissons(_qt)) {
             this.nbBoissons += _qt;
-            return true;
-        } else {
-            return false;
         }
     }
 
     /* Permet d'attaquer un zombie */
-    public boolean attaquerZombie() {
-        /* Vérifie si le Citoyen n'a plus de PA */
+    public void attaquerZombie() {
         if (this.pa == 0) {
             System.out.println(this.nom + " n'a plus de point d'action !");
-            return false;
-        }
-
-        if (((Exterieur) this.carte[this.y][this.x]).attaquerZombie()) {
+        } else if (((Exterieur) this.carte[this.y][this.x]).attaquerZombie()) {
             System.out.println(this.nom + " attaque un zombie");
             this.pa--;
 
@@ -400,57 +449,17 @@ public class Citoyen {
                 System.out.println(this.nom + " massacre le zombie sans une "
                         + "égratignure");
             }
-            return true;
-        }
-        return false;
-    }
-
-    /* Permet de récupérer 6 PA en mangeant une ration */
-    public boolean mangerRation() {
-        if (this.aMange) {
-            System.out.println(this.nom + " a déjà mangé une ration "
-                    + "aujourd'hui");
-            return false;
-        }
-        if (this.nbRation == 0) {
-            System.out.println(this.nom + " n'a plus de ration dans son "
-                    + "inventaire");
-            return false;
-        } else {
-            this.nbRation = 0;
-            this.aMange = true;
-            this.pa += 6;
-            if (this.pa > this.MAX_PA) {
-                this.pa = this.MAX_PA;
-            }
-            System.out.println(this.nom + " mange une ration");
-            return true;
         }
     }
-
-    /* Permet de récupérer 6 PA en buvant une gourde */
-    public boolean boireGourde() {
-        if (this.aBu) {
-            System.out.println(this.nom + " a déjà bu une gourde "
-                    + "aujourd'hui");
-            return false;
-        }
-        if (this.nbGourde == 0) {
-            System.out.println(this.nom + " n'a plus de gourde dans son "
-                    + "inventaire");
-            return false;
-        } else {
-            this.nbGourde = 0;
-            this.aBu = true;
-            this.pa += 6;
-            if (this.pa > this.MAX_PA) {
-                this.pa = this.MAX_PA;
-            }
-            System.out.println(this.nom + " boit un gourde");
-            return true;
+    
+    /* Permet de mettre à jour le Talkie-Walkie */
+    public void majTalkie() {
+        if (this.pa == 0) {
+            System.out.println(this.nom + " n'a plus de point d'action !");
+        } else if (this.talkie.miseAJour(this.x, this.y)) {
+            this.pa--;
         }
     }
-
     
     /* Retourne le Citoyen sous la forme Nom (PV, PA) [x, y] Inventaire */
     public String toString() {
@@ -460,6 +469,14 @@ public class Citoyen {
             s += " [En ville]\n";
         } else {
             s += " [" + this.x + "," + this.y + "]\n";
+        }
+        
+        if (this.accroc) {
+            if (this.dose > 0) {
+                 s += "  Accroc : " + this.dose + " tours restants\n";
+            } else {
+                s += "  Accroc : En manque !!!\n";
+            } 
         }
 
         s += this.getInventaire();
@@ -523,6 +540,19 @@ public class Citoyen {
         if (this.pa > this.MAX_PA) {
             this.pa = this.MAX_PA;
         }
+        
+        if (this.accroc) {
+            this.dose --;
+            if (this.dose < 0) {
+                this.pv -= 5; 
+            }
+        }
+    }
+    
+    /* Appelé à la fin de la journée => repasse aBu et aMange à FALSE */
+    public void finDeJournee() {
+        this.aBu = false;
+        this.aMange = false;
     }
 
 }

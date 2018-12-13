@@ -17,7 +17,10 @@ import java.util.Scanner;
 public class Horde {
 
     /* Carte du jeu */
-    private Case carte[][];
+    private Case[][] carte;
+    
+    /* Talkie */
+    private Talkie talkie;
 
     /* Citoyens */
     private int nbCitoyens;
@@ -27,15 +30,14 @@ public class Horde {
     private ArrayList<String> actionVille;
     private ArrayList<String> actionExterieur;
 
-    /* Scanner */
-    private Scanner sc;
-
     /* Random */
     private Random ra;
 
     /* Constructeur */
     public Horde(int _nbCitoyens) {
         this.carte = new Case[25][25];
+        
+        this.talkie = new Talkie(this.carte);
 
         this.nbCitoyens = _nbCitoyens;
         this.citoyens = new ArrayList<>();
@@ -43,44 +45,63 @@ public class Horde {
         this.actionVille = new ArrayList<>();
         this.actionExterieur = new ArrayList<>();
 
-        this.sc = new Scanner(System.in);
-
         this.ra = new Random();
+    }
+    
+    /* Demande le nombre de joueur puis créé et retourne une partie de Horde 
+    avec le nombre de joueurs demandé */
+    public static Horde nouvellePartie() {
+        System.out.println("=== NOUVELLE PARTIE ===");
+        System.out.print("Nombre de joueurs (entre 2 et 20) : ");
+        int nbJoueurs = Horde.scanner();
+        while (nbJoueurs < 2 || nbJoueurs > 20) {
+            System.out.print("Nombre de joueurs incorrecte, ressaisissez un "
+                    + "nombre : ");
+            nbJoueurs = Horde.scanner();
+        }
+        return new Horde(nbJoueurs);
     }
 
     /* Initialise la partie => Défini les actions, génère la carte, ajoute les 
     planches, le métal et les boissons, puis créé les Citoyens */
     public void init() {
+        Scanner sc = new Scanner(System.in);
         System.out.println("Démarrage du jeu...\n");
 
         /* Actions Ville */
-        this.actionVille.add("0 - Passer son tour");
-        this.actionVille.add("1 - Ouvrir la porte");
-        this.actionVille.add("2 - Fermer la porte");
-        this.actionVille.add("3 - Prendre une ration");
-        this.actionVille.add("4 - Boire au puit");
-        this.actionVille.add("5 - Remplir une gourde");
-        this.actionVille.add("6 - Déposer des planches de bois");
-        this.actionVille.add("7 - Déposer des plaques de métal");
-        this.actionVille.add("8 - Déposer des boissons énergisantes");
-        this.actionVille.add("9 - Accéder aux défenses");
-        this.actionVille.add("10 - Se déplacer");
+        this.actionVille.add(" 0 - Passer son tour");
+        this.actionVille.add(" 1 - Ouvrir la porte");
+        this.actionVille.add(" 2 - Fermer la porte");
+        this.actionVille.add(" 3 - Prendre une ration");
+        this.actionVille.add(" 4 - Boire au puit");
+        this.actionVille.add(" 5 - Remplir une gourde");
+        this.actionVille.add(" 6 - Manger une ration");
+        this.actionVille.add(" 7 - Boire une gourde");
+        this.actionVille.add(" 8 - Boire une boisson énergisante");
+        this.actionVille.add(" 9 - Déposer des planches de bois");
+        this.actionVille.add("10 - Déposer des plaques de métal");
+        this.actionVille.add("11 - Déposer des boissons énergisantes");
+        this.actionVille.add("12 - Accéder aux défenses");
+        this.actionVille.add("13 - Consulter le Talkie-Walkie");
+        this.actionVille.add("14 - Se déplacer");
 
         /* Actions Exterieur */
-        this.actionExterieur.add("0 - Passer son tour");
-        this.actionExterieur.add("1 - Fouiller");
-        this.actionExterieur.add("2 - Récupérer des planches de bois");
-        this.actionExterieur.add("3 - Récupérer des plaques de métal");
-        this.actionExterieur.add("4 - Récupérer des boissons énergisantes");
-        this.actionExterieur.add("5 - Attaquer des zombies");
-        this.actionExterieur.add("6 - Manger une ration");
-        this.actionExterieur.add("7 - Boire une gourde");
-        //this.actionExterieur.add("8 - Boire une boisson énergisante");
-        this.actionExterieur.add("9 - Se déplacer");
+        this.actionExterieur.add(" 0 - Passer son tour");
+        this.actionExterieur.add(" 1 - Fouiller");
+        this.actionExterieur.add(" 2 - Récupérer des planches de bois");
+        this.actionExterieur.add(" 3 - Récupérer des plaques de métal");
+        this.actionExterieur.add(" 4 - Récupérer des boissons énergisantes");
+        this.actionExterieur.add(" 5 - Attaquer des zombies");
+        this.actionExterieur.add(" 6 - Manger une ration");
+        this.actionExterieur.add(" 7 - Boire une gourde");
+        this.actionExterieur.add(" 8 - Boire une boisson énergisante");
+        this.actionExterieur.add(" 9 - Consulter le Talkie-Walkie");
+        this.actionExterieur.add("10 - Mettre à jour le Talkie-Walkie");
+        this.actionExterieur.add("11 - Se déplacer");
 
         System.out.println("Génération de la carte...\n");
 
-        /* Créé toute les Cases que la carte */
+        /* Créé toutes les Cases que la carte */
         for (int j = 0; j < 25; j++) {
             for (int i = 0; i < 25; i++) {
                 if (i == 12 && j == 12) {
@@ -130,19 +151,25 @@ public class Horde {
             ((Exterieur) this.carte[y][x]).ajouterBoisson();
         }
 
-        System.out.println("Création des joueurs");
+        this.afficherCarte();
+        System.out.println();
+        
+        System.out.println("Création des joueurs\n");
 
         for (int i = 0; i < this.nbCitoyens; i++) {
             System.out.print("Joueur " + (i + 1) + " : ");
-            this.citoyens.add(new Citoyen(this.sc.nextLine(), this.carte));
+            this.citoyens.add(new Citoyen(sc.nextLine(), this.carte, 
+                    this.talkie));
         }
+        
+        System.out.println();
     }
 
     /* Lance le jeu */
     public void jouer() {
         int jour = 0;
         int nbZ = 0;
-
+        
         /* Tant qu'il reste plus d'un joueur */
         while (this.citoyens.size() > 1) {
 
@@ -167,7 +194,6 @@ public class Horde {
 
                     /* Tant que le Citoyen souhaite continuer à jouer */
                     while (continuer) {
-                        this.afficherCarte();
                         
                         System.out.println(citoyen);
                         
@@ -268,6 +294,10 @@ public class Horde {
             System.out.println("");
             System.out.println("Pressez ENTRER pour continuer...");
             this.pressEnter();
+            
+            for (Citoyen citoyen : this.citoyens) {
+                citoyen.finDeJournee();
+            }
         }
 
         /* Fin de la partie, affiche le Citoyen gagnant */
@@ -307,21 +337,33 @@ public class Horde {
             case 5 :
                 _citoyen.remplirGourde();
                 return true;
-            /* Déposer des planches */
+             /* Manger une ration */
             case 6 :
+                _citoyen.mangerRation();
+                return true;
+            /* Boire une goude */
+            case 7 :
+                _citoyen.boireGourde();
+                return true;
+            /* Boire une boisson énergisante */
+            case 8 :
+                _citoyen.boireBoisson();
+                return true;
+            /* Déposer des planches */
+            case 9 :
                 _citoyen.deposerPlanches();
                 return true;
             /* Déposer des plaques */
-            case 7 :
+            case 10 :
                 _citoyen.deposerMetal();
                 return true;
             /* Déposer des boissons */
-            case 8 :
+            case 11 :
                 System.out.print("Nombre de boissons énergisantes : ");
                 _citoyen.deposerBoissons(this.scanner());
                 return true;
             /* Menu des défenses */
-            case 9 :
+            case 12 :
                 System.out.println(((Ville)this.carte[12][12]).listDef());
                 System.out.print("Choisissez la défense : ");
                 int action = this.scanner();
@@ -361,8 +403,12 @@ public class Horde {
                     _citoyen.construire(action - 1, pa);
                     return true;
                 }
+            /* Consulter le Talkie-Walkie */
+            case 13 :
+                System.out.println(this.talkie);
+                return true;
             /* Se déplacer */
-            case 10 :
+            case 14 :
                 System.out.println("Déplacement vers :");
                 System.out.println("  0 - Annuler");
                 System.out.println("  1 - Nord");
@@ -428,8 +474,20 @@ public class Horde {
             case 7 :
                 _citoyen.boireGourde();
                 return true;
-            /* Se déplacer */
+            /* Boire une boisson énergisante */
+            case 8 :
+                _citoyen.boireBoisson();
+                return true;
+            /* Consulter le Talkie-Walkie */
             case 9 :
+                System.out.println(this.talkie);
+                return true;
+            /* Mettre à jour le Talkie-Walkie */
+            case 10 :
+                _citoyen.majTalkie();
+                return true;
+            /* Se déplacer */
+            case 11 :
                 System.out.println("Déplacement vers :");
                 System.out.println("  0 - Annuler");
                 System.out.println("  1 - Nord");
@@ -457,43 +515,44 @@ public class Horde {
         return true;
     }
     
-    /* Affiche toute la carte */
-    private void afficherCarte() {
-        for (int j = 0; j < 25; j++) {
-            for (int i = 0; i < 25; i++) {
-                if (i == 12 && j == 12) {
-                    System.out.print("@@@");
-                } else if (((Exterieur) this.carte[j][i]).isFouiller()){
-                    System.out.print("   ");
-                } else {
-                    System.out.print("-#-");
-                }
-            }
-            System.out.println();
-        }
-    }
-    
     /* Protection du Scanner (saisie obligatoire d'un int */
-    private int scanner() {
+    private static int scanner() {
         int n = -1;
         boolean valid = false;
+        Scanner sc = new Scanner(System.in);
         
         do {
-            if(this.sc.hasNextInt()) {
-                n = this.sc.nextInt();
+            if(sc.hasNextInt()) {
+                n = sc.nextInt();
                 valid = true;
             } else {
                 System.out.print("Veuillez saisir un nombre ! ");
-                this.sc.next();
+                sc.next();
             }
         } while(!valid);
         
         return n;
     }
 
+    /* Permet de laisser le temps de lire le bilan de fin de nuit (appelé à la 
+    fin de la journée) */
     private void pressEnter(){
         try {
             System.in.read();
         } catch(IOException e) {}
+    }
+    
+    /* Affiche la carte au début de la partie */
+    private void afficherCarte() {
+        for (int j = 0 ; j < this.carte.length ; j++) {
+            for (int i = 0 ; i < this.carte[0].length ; i++) {
+                if (j == 12 && i == 12) {
+                    System.out.print("[V]");
+                } else {
+                    System.out.print("-#-");
+                }
+            }
+            System.out.println();
+        }
     }
 }

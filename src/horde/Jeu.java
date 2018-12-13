@@ -14,7 +14,7 @@ public class Jeu {
     public static void main(String[] args) {
         System.out.println("Bienvenue dans Horde !!!");
         
-        Horde horde = new Horde(2);
+        Horde horde = Horde.nouvellePartie();
         
         horde.init();
         

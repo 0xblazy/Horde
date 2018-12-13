@@ -24,8 +24,8 @@ public class Ville extends Case {
     public Ville() {
         super(12, 12);
         
-        this.nbPlanches = 100;
-        this.nbMetal = 100;
+        this.nbPlanches = 0;
+        this.nbMetal = 0;
         this.nbBoissons = 0;
         this.nbRations = 50;
         
@@ -109,7 +109,7 @@ public class Ville extends Case {
     /* Retourne la case Ville sous la forme Ville : Porte OUVERTE/FERMÉE 
     Entrepot */
     public String toString() {
-        String s = "Ville :\n";
+        String s = "Ville (résiste à " + this.defenses() + " zombies) :\n";
         s += "  Porte ";
         if(this.porteOuverte) {
             s += "OUVERTE\n";

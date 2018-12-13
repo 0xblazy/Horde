@@ -37,7 +37,7 @@ public class Exterieur extends Case {
     }
 
     /* GENERATION */
- /* Ajoute une planche de bois sur la Case Exterieur (utilisée lors de la 
+    /* Ajoute une planche de bois sur la Case Exterieur (utilisée lors de la 
     génération de la carte) */
     public void ajouterPlanche() {
         this.nbPlanches++;
@@ -56,7 +56,7 @@ public class Exterieur extends Case {
     }
 
     /* ACTIONS */
- /* Fouille une case => Retourne FALSE si la Case était déjà fouillée */
+    /* Fouille une case => Retourne FALSE si la Case était déjà fouillée */
     public boolean fouiller() {
         if (this.fouiller) {
             System.out.println("Cette case a déjà été fouillée !!!");
@@ -163,7 +163,19 @@ public class Exterieur extends Case {
         return s;
     }
 
-    /* Retourne vrai si la case est fouiller */
+    public int getNbPlanches() {
+        return this.nbPlanches;
+    }
+
+    public int getNbMetal() {
+        return this.nbMetal;
+    }
+
+    public int getNbBoissons() {
+        return this.nbBoissons;
+    }
+
+    /* Retourne vrai si la case est fouillée */
     public boolean isFouiller() {
         return this.fouiller;
     }
