@@ -18,7 +18,6 @@ public class Horde {
 
     /* Carte du jeu */
     private Case[][] carte;
-    
     /* Talkie */
     private Talkie talkie;
 
@@ -55,7 +54,7 @@ public class Horde {
         System.out.print("Nombre de joueurs (entre 2 et 20) : ");
         int nbJoueurs = Horde.scanner();
         while (nbJoueurs < 2 || nbJoueurs > 20) {
-            System.out.print("Nombre de joueurs incorrecte, ressaisissez un "
+            System.out.print("Nombre de joueurs incorrect, ressaisissez un "
                     + "nombre : ");
             nbJoueurs = Horde.scanner();
         }
@@ -63,7 +62,7 @@ public class Horde {
     }
 
     /* Initialise la partie => Défini les actions, génère la carte, ajoute les 
-    planches, le métal et les boissons, puis créé les Citoyens */
+    Planches, le Métal et les Boissons, puis créé les Citoyens */
     public void init() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Démarrage du jeu...\n");
@@ -72,36 +71,36 @@ public class Horde {
         this.actionVille.add(" 0 - Passer son tour");
         this.actionVille.add(" 1 - Ouvrir la porte");
         this.actionVille.add(" 2 - Fermer la porte");
-        this.actionVille.add(" 3 - Prendre une ration");
+        this.actionVille.add(" 3 - Prendre une Ration");
         this.actionVille.add(" 4 - Boire au puit");
-        this.actionVille.add(" 5 - Remplir une gourde");
-        this.actionVille.add(" 6 - Manger une ration");
-        this.actionVille.add(" 7 - Boire une gourde");
-        this.actionVille.add(" 8 - Boire une boisson énergisante");
-        this.actionVille.add(" 9 - Déposer des planches de bois");
-        this.actionVille.add("10 - Déposer des plaques de métal");
-        this.actionVille.add("11 - Déposer des boissons énergisantes");
-        this.actionVille.add("12 - Accéder aux défenses");
+        this.actionVille.add(" 5 - Remplir une Gourde");
+        this.actionVille.add(" 6 - Manger une Ration");
+        this.actionVille.add(" 7 - Boire une Gourde");
+        this.actionVille.add(" 8 - Boire une Boisson énergisante");
+        this.actionVille.add(" 9 - Déposer des Planches de bois");
+        this.actionVille.add("10 - Déposer des plaques de Métal");
+        this.actionVille.add("11 - Déposer des Boissons énergisantes");
+        this.actionVille.add("12 - Accéder au menu des Défenses");
         this.actionVille.add("13 - Consulter le Talkie-Walkie");
         this.actionVille.add("14 - Se déplacer");
 
         /* Actions Exterieur */
         this.actionExterieur.add(" 0 - Passer son tour");
         this.actionExterieur.add(" 1 - Fouiller");
-        this.actionExterieur.add(" 2 - Récupérer des planches de bois");
-        this.actionExterieur.add(" 3 - Récupérer des plaques de métal");
-        this.actionExterieur.add(" 4 - Récupérer des boissons énergisantes");
-        this.actionExterieur.add(" 5 - Attaquer des zombies");
-        this.actionExterieur.add(" 6 - Manger une ration");
-        this.actionExterieur.add(" 7 - Boire une gourde");
-        this.actionExterieur.add(" 8 - Boire une boisson énergisante");
+        this.actionExterieur.add(" 2 - Ramasser des Planches de bois");
+        this.actionExterieur.add(" 3 - Ramasser des plaques de Métal");
+        this.actionExterieur.add(" 4 - Ramasser des Boissons énergisantes");
+        this.actionExterieur.add(" 5 - Attaquer des Zombies");
+        this.actionExterieur.add(" 6 - Manger une Ration");
+        this.actionExterieur.add(" 7 - Boire une Gourde");
+        this.actionExterieur.add(" 8 - Boire une Boisson énergisante");
         this.actionExterieur.add(" 9 - Consulter le Talkie-Walkie");
         this.actionExterieur.add("10 - Mettre à jour le Talkie-Walkie");
         this.actionExterieur.add("11 - Se déplacer");
 
         System.out.println("Génération de la carte...\n");
 
-        /* Créé toutes les Cases que la carte */
+        /* Créé toutes les Cases de la carte */
         for (int j = 0; j < 25; j++) {
             for (int i = 0; i < 25; i++) {
                 if (i == 12 && j == 12) {
@@ -154,7 +153,7 @@ public class Horde {
         this.afficherCarte();
         System.out.println();
         
-        System.out.println("Création des joueurs\n");
+        System.out.println("=== CRÉATION DES JOUEURS ===");
 
         for (int i = 0; i < this.nbCitoyens; i++) {
             System.out.print("Joueur " + (i + 1) + " : ");
@@ -165,7 +164,7 @@ public class Horde {
         System.out.println();
     }
 
-    /* Lance le jeu */
+    /* Boucle de jeu */
     public void jouer() {
         int jour = 0;
         int nbZ = 0;
@@ -177,7 +176,7 @@ public class Horde {
             nbZ += 10;
             int tour = 0;
 
-            System.out.println("==== JOUR " + jour + " ====");
+            System.out.println("=== JOUR " + jour + " ===");
 
             /* Boucle sur les 12 tours d'une journée */
             for (int i = 0; i < 12; i++) {
@@ -196,11 +195,13 @@ public class Horde {
                     while (continuer) {
                         
                         System.out.println(citoyen);
+                        System.out.println();
                         
                         /* Vérifie si le Citoyen est encore en vie (si il a 
                         encore des PV) */
                         if (citoyen.estMort()) {
-                            System.out.println(citoyen.getNom() + " est mort");
+                            System.out.println(citoyen.getNom() + " est "
+                                    + "mort...");
                             continuer = false;
                             this.citoyens.remove(citoyen);
                         } else {
@@ -208,8 +209,8 @@ public class Horde {
                             l'emplacement du Citoyen */
                             if (citoyen.isEnVille()) {
                                 System.out.println((Ville) this.carte[12][12]);
-                                System.out.println("");
-                                System.out.println("== ACTIONS ==");
+                                System.out.println();
+                                System.out.println("=== ACTIONS EN VILLE ===");
                                 for (String action : this.actionVille) {
                                     System.out.println("  " + action);
                                 }
@@ -218,38 +219,42 @@ public class Horde {
                                 
                                 while (action < 0 || action > this.actionVille
                                         .size() - 1) {
-                                    System.out.print("Saisie incorrecte, "
+                                    System.out.print("Action invalide, "
                                             + "ressaisissez un nombre :  ");
                                     action = this.scanner();
                                 }
                                 
+                                System.out.println();
                                 continuer = this.actionVille(citoyen,
                                         action);
                             } else {
                                 System.out.println((Exterieur) this.carte
                                         [citoyen.getY()][citoyen.getX()]);
-                                System.out.println("");
-                                System.out.println("== ACTIONS ==");
+                                System.out.println();
+                                System.out.println("=== ACTIONS EN EXTÉRIEUR "
+                                        + "===");
                                 for (String action : this.actionExterieur) {
                                     System.out.println("  " + action);
                                 }
                                 System.out.print("Action : ");
                                 int action = this.scanner();
                                 
-                                while (action < 0 || action > this.actionExterieur.size()) {
-                                    System.out.print("Saisie incorrecte, "
+                                while (action < 0 || action > 
+                                        this.actionExterieur.size()) {
+                                    System.out.print("Action invalide, "
                                             + "ressaisissez un nombre :  ");
                                     action = this.scanner();
                                 }
                                 
+                                System.out.println();
                                 continuer = this.actionExterieur(citoyen,
                                         action);
                             }
                         }
-                        System.out.println("");
+                        System.out.println();
                     }
                     citoyen.finDeTour();
-                    System.out.println("");
+                    System.out.println();
                 }
             }
 
@@ -259,7 +264,8 @@ public class Horde {
             ArrayList<Citoyen> citoyensMorts = new ArrayList<>();
 
             /* "Tue" tous les Citoyens à l'extérieur de la Ville => Les supprime 
-            de la List des citoyens et l'ajoute à la List des citoyens morts */
+            de la liste des citoyens et les ajoute à la liste des citoyens 
+            morts */
             for (Citoyen citoyen : this.citoyens) {
                 if (!citoyen.isEnVille()) {
                     citoyensMorts.add(citoyen);
@@ -270,7 +276,7 @@ public class Horde {
             /* Défini le nombre de zombies attaquant la Ville */
             int nbZombie = nbZ + this.ra.nextInt(11);
 
-            /* Si le nombre de zombies attaquants est plus grand que le nombre 
+            /* Si le nombre de zombies attaquant est plus grand que le nombre 
             de zombies auquel la Ville peut résister, "Tue" aléatoirement la 
             moitié des Citoyens restants */
             if (nbZombie > ((Ville) this.carte[12][12]).defenses()) {
@@ -286,7 +292,7 @@ public class Horde {
             System.out.println("");
 
             /* Affiche le bilan de la nuit (nombre et liste des morts) */
-            System.out.println("==== BILAN DE LA NUIT ====");
+            System.out.println("=== BILAN DE LA NUIT ===");
             System.out.println(citoyensMorts.size() + " morts");
             for (Citoyen citoyenMort : citoyensMorts) {
                 System.out.println(citoyenMort.getNom());
@@ -301,12 +307,12 @@ public class Horde {
         }
 
         /* Fin de la partie, affiche le Citoyen gagnant */
-        System.out.println("===== PARTIE TERMINEE =====");
+        System.out.println("=== PARTIE TERMINEE ===");
         if(this.citoyens.size() == 0) {
             System.out.println("Aucun citoyen a survécu...");
         } else {
             System.out.println(this.citoyens.get(0).getNom() + " a gagné la "
-                    + "partie");
+                    + "partie !!!");
         }
     }
 
@@ -315,7 +321,7 @@ public class Horde {
         switch (_action) {
             /* Passer son tour */
             case 0 :
-                System.out.println(_citoyen.getNom() + " passe son tour");
+                System.out.println(_citoyen.getNom() + " passe son tour...");
                 return false;
             /* Ouvrir porte */
             case 1 :
@@ -360,46 +366,57 @@ public class Horde {
             /* Déposer des boissons */
             case 11 :
                 System.out.print("Nombre de boissons énergisantes : ");
-                _citoyen.deposerBoissons(this.scanner());
+                int nb = this.scanner();
+                while (nb < 1 || nb >10) {
+                    System.out.print("Nombre incorrect, ressaisissez un nombre "
+                            + ": ");
+                    nb = this.scanner();
+                }
+                System.out.println();
+                _citoyen.deposerBoissons(nb);
                 return true;
             /* Menu des défenses */
             case 12 :
                 System.out.println(((Ville)this.carte[12][12]).listDef());
-                System.out.print("Choisissez la défense : ");
+                System.out.print("Défense : ");
                 int action = this.scanner();
                 while (action < -1 || action > ((Ville)this.carte[12][12])
                         .nbDef()) {
-                    System.out.print("Saisie incorrecte, "
-                             + "ressaisissez un nombre :  ");
+                    System.out.print("Choix incorrect, "
+                             + "ressaisissez un nombre : ");
                     action = this.scanner();
                 }
                 
                 if (action == -1) {
+                    System.out.println();
                     System.out.println("Sortie du menu des Défenses");
                     return true;
                 } else if (action == 0) {
                     System.out.println(Defense.listeDefenses());
-                    System.out.print("Defense : ");
+                    System.out.print("Nouvelle défense : ");
                     int def = this.scanner();
                     while (def < -1 || def == 0 || def > 7) {
-                        System.out.print("Saisie incorrecte, "
-                             + "ressaisissez un nombre :  ");
+                        System.out.print("Choix incorrect, "
+                             + "ressaisissez un nombre : ");
                         def= this.scanner();
                     }
                     if (def == -1) {
+                        System.out.println();
                         System.out.println("Sortie du menu des Défenses");
                         return true;
                     }
+                    System.out.println();
                     _citoyen.nouvelleDefense(def - 1);
                     return true;
                 } else {
                     System.out.print("Nombre de PA : ");
                     int pa = this.scanner();
                     while (pa < 0 || pa > 10 ) {
-                        System.out.print("Saisie incorrecte, "
-                             + "ressaisissez un nombre :  ");
+                        System.out.print("Nombre de PA incorrect, "
+                             + "ressaisissez un nombre : ");
                         pa = this.scanner();
                     }
+                    System.out.println();
                     _citoyen.construire(action - 1, pa);
                     return true;
                 }
@@ -420,11 +437,11 @@ public class Horde {
                 int dir = this.scanner();
                 
                 while (dir < 0 || dir > 4) {
-                    System.out.print("Saisie incorrecte, "
-                             + "ressaisissez un nombre :  ");
+                    System.out.print("Direction incorrecte, "
+                             + "ressaisissez un nombre : ");
                     dir = this.scanner();
                 }
-                
+                System.out.println();
                 if (dir == 0) {
                     System.out.println("Déplacement annulé");
                     return true;
@@ -441,26 +458,47 @@ public class Horde {
         switch (_action) {
             /* Passer son tour */
             case 0 :
-                System.out.println(_citoyen.getNom() + " passe son tour");
+                System.out.println(_citoyen.getNom() + " passe son tour...");
                 return false;
             /* Fouiller */
             case 1 :
                 _citoyen.fouiller();
                 return true;
-            /* Récupérer planches */
+            /* Ramasser planches */
             case 2 :
-                System.out.print("Nombre de planches de bois : ");
-                _citoyen.prendrePlanches(this.scanner());
+                System.out.print("Nombre de Planches de bois : ");
+                int nbP = this.scanner();
+                while (nbP < 1 || nbP >10) {
+                    System.out.print("Nombre incorrect, ressaisissez un nombre "
+                            + ": ");
+                    nbP = this.scanner();
+                }
+                System.out.println();
+                _citoyen.prendrePlanches(nbP);
                 return true;
-            /* Récupérer plaques */
+            /* Ramasser plaques */
             case 3 :
-                System.out.print("Nombre de plaques de métal : ");
-                _citoyen.prendreMetal(this.scanner());
+                System.out.print("Nombre de plaques de Métal : ");
+                int nbM = this.scanner();
+                while (nbM < 1 || nbM >10) {
+                    System.out.print("Nombre incorrect, ressaisissez un nombre "
+                            + ": ");
+                    nbM = this.scanner();
+                }
+                System.out.println();
+                _citoyen.prendreMetal(nbM);
                 return true;
-            /* Récupérer boissons */
+            /* Ramasser boissons */
             case 4 :
-                System.out.print("Nombre de boissons énergisantes : ");
-                _citoyen.prendreBoissons(this.scanner());
+                System.out.print("Nombre de Boissons énergisantes : ");
+                int nbB = this.scanner();
+                while (nbB < 1 || nbB >10) {
+                    System.out.print("Nombre incorrect, ressaisissez un nombre "
+                            + ": ");
+                    nbB = this.scanner();
+                }
+                System.out.println();
+                _citoyen.prendreBoissons(nbB);
                 return true;
             /* Attaquer zombies */
             case 5 :
@@ -499,11 +537,12 @@ public class Horde {
                 int dir = this.scanner();
                 
                 while (dir < 0 || dir > 4) {
-                    System.out.print("Saisie incorrecte, "
-                             + "ressaisissez un nombre :  ");
+                    System.out.print("Direction incorrecte, "
+                             + "ressaisissez un nombre : ");
                     dir = this.scanner();
                 }
                 
+                System.out.println();
                 if (dir == 0) {
                     System.out.println("Déplacement annulé");
                     return true;
@@ -515,7 +554,7 @@ public class Horde {
         return true;
     }
     
-    /* Protection du Scanner (saisie obligatoire d'un int */
+    /* Protection du Scanner (saisie obligatoire d'un int) */
     private static int scanner() {
         int n = -1;
         boolean valid = false;

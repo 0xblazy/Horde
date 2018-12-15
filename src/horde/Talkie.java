@@ -10,9 +10,12 @@ package horde;
  * @author nK_BlaZy
  */
 public class Talkie {
+    /* "Carte" des Case mises à jour */
     private String[][] carteInfo;
+    /* Carte du jeu */
     private Case[][] carte;
     
+    /* Constructeur */
     public Talkie(Case[][] _carte) {
         this.carte = _carte;
         
@@ -28,8 +31,10 @@ public class Talkie {
         }
     }
     
+    /* Met à jour la Case de coordonnées _x, _y dans carteInfo (avec les 
+    données de carte) */
     public boolean miseAJour(int _x, int _y) {
-        if (((Exterieur)this.carte[_y][_x]).isFouiller()) {
+        if (((Exterieur)this.carte[_y][_x]).isFouillee()) {
             this.carteInfo[_y][_x] = "" + 
                 ((Exterieur)this.carte[_y][_x]).getNbPlanches() + "P" + 
                 ((Exterieur)this.carte[_y][_x]).getNbMetal() + "M" +
@@ -42,6 +47,8 @@ public class Talkie {
         }
     }
     
+    /* Retourne carteInfo sous la forme d'une chaîne de caractère, destinée à 
+    être affichée lors de la consultation du Talkie-Walkie */
     public String toString() {
         String s = "";
         for (int j = -1 ; j < this.carteInfo.length ; j++) {

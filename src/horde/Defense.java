@@ -11,12 +11,18 @@ package horde;
  */
 public class Defense {
     
+    /* Nom de la Defense */
     private String nom;
-    private int nbPlanche, nbMetal;
+    /* Nombre de ressouces nécessaires à la construction de la Defense */
+    private int nbPlanche,nbMetal;
+    /* Nombre de PA nécessaires à la construction de la Defense */
     private int nbPA;
+    /* Nombre de zombies auquel la Defense résiste */
     private int nbZombie;
+    /* TRUE lorsque la Defense est active => FALSE par défaut */
     private boolean active;
     
+    /* Énumération contenant les Defense posibles */
     public static enum Defenses {
         MUR("Mur d'enceinte", 20, 5, 10 , 20),
         FILS("Fils barbelés", 20, 30, 20, 30),
@@ -42,6 +48,7 @@ public class Defense {
         }
     }
     
+    /* Constructeur */
     public Defense(int _id) {
         this.nom = Defenses.values()[_id].nom;
         this.nbPlanche = Defenses.values()[_id].nbPlanches;
@@ -51,11 +58,14 @@ public class Defense {
         this.active = false;
     }
     
+    /* Fait progresser la construction de la Defense de _pa PA => FALSE si la 
+    Defense est active ou si _pa est plus grand que le nombre de PA restants 
+    pour achever la construction */
     public boolean contruire(int _pa) {
         if(!this.active) {
             if(this.nbPA - _pa < 0) {
-                System.out.println("Il suffit de " + this.nbPA + " PA pour achever"
-                        + " la construction");
+                System.out.println("Il suffit de " + this.nbPA + " PA pour "
+                        + "achever la construction...");
                 return false;
             } else {
                 this.nbPA -= _pa;
@@ -69,11 +79,12 @@ public class Defense {
                 return true;
             }
         } else {
-            System.out.println(this.nom + " déjà construit !!");
+            System.out.println(this.nom + " déjà construit !!!");
             return false;
         }
     }
     
+    /* Retourne la Defense sous la forme Nom [Active/nbPA] */
     public String toString() {
         String s = this.nom + " [";
         
@@ -86,6 +97,8 @@ public class Defense {
         return s;
     }
     
+    /* Retourne une chaine contenant les Defense possibles (depuis l'enum), 
+    destinée à être affichée lors de choix d'une nouvelle construction */
     public static String listeDefenses() {
         String s = "";
         int i = 1;
@@ -101,18 +114,12 @@ public class Defense {
         return s;
     }
 
-    public int getNbMetal() {
-        return nbMetal;
-    }
-
-    public int getNbPlanche() {
-        return nbPlanche;
-    }
-
+    /* Retourne le nombre de zombie auquel la Defense résiste */
     public int getNbZombie() {
-        return nbZombie;
+        return this.nbZombie;
     }
 
+    /* Retourne TRUE si la Defense est active */
     public boolean isActive() {
         return this.active;
     }

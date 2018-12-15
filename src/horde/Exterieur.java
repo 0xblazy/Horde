@@ -11,12 +11,12 @@ package horde;
  */
 public class Exterieur extends Case {
 
-    /* Nombres d'items */
-    private int nbPlanches, nbMetal, nbBoissons;
+    /* Nombres d'items sur la case*/
+    private int nbPlanches,nbMetal,nbBoissons;
     /* Nombre de zombies */
     private int nbZombies;
     /* Booléen qui défini si la case est fouillée => FAUX par défaut */
-    private boolean fouiller;
+    private boolean fouillee;
 
     /* Constructeur */
     public Exterieur(int _x, int _y) {
@@ -33,10 +33,10 @@ public class Exterieur extends Case {
             this.nbZombies = (i - 30) / 10 + 1;
         }
 
-        this.fouiller = false;
+        this.fouillee = false;
     }
 
-    /* GENERATION */
+    /* GÉNÉRATION */
     /* Ajoute une planche de bois sur la Case Exterieur (utilisée lors de la 
     génération de la carte) */
     public void ajouterPlanche() {
@@ -58,75 +58,75 @@ public class Exterieur extends Case {
     /* ACTIONS */
     /* Fouille une case => Retourne FALSE si la Case était déjà fouillée */
     public boolean fouiller() {
-        if (this.fouiller) {
+        if (this.fouillee) {
             System.out.println("Cette case a déjà été fouillée !!!");
             return false;
         } else {
-            this.fouiller = true;
+            this.fouillee = true;
             return true;
         }
 
     }
 
     /* Prend _qt Planches de la Case => Retourne FALSE si il n'y a pas assez de 
-    Planches sur la Case */
+    Planches sur la Case ou si la Case n'a pas été fouillée */
     public boolean prendrePlanches(int _qt) {
-        if (this.fouiller) {
+        if (this.fouillee) {
             if (this.nbPlanches - _qt < 0) {
                 System.out.println("Il n'y a que " + this.nbPlanches
-                        + " planches de bois sur cette case");
+                        + " Planches de bois sur cette case...");
                 return false;
             } else {
                 this.nbPlanches -= _qt;
                 return true;
             }
         } else {
-            System.out.println("La case n'a pas encore été fouillée");
+            System.out.println("La case n'a pas encore été fouillée !!!");
             return false;
         }
     }
 
     /* Prend _qt Metal de la Case => Retourne FALSE si il n'y a pas assez de 
-    Metal sur la Case */
+    Metal sur la Case ou si la Case n'a pas été fouillée */
     public boolean prendreMetal(int _qt) {
-        if (this.fouiller) {
+        if (this.fouillee) {
             if (this.nbMetal - _qt < 0) {
                 System.out.println("Il n'y a que " + this.nbMetal
-                        + " plaques de métal sur cette case");
+                        + " plaques de Métal sur cette case...");
                 return false;
             } else {
                 this.nbMetal -= _qt;
                 return true;
             }
         } else {
-            System.out.println("La case n'a pas encore été fouillée");
+            System.out.println("La case n'a pas encore été fouillée !!!");
             return false;
         }
     }
 
     /* Prend _qt Boissons de la Case => Retourne FALSE si il n'y a pas assez de 
-    Boissons sur la Case */
+    Boissons sur la Case ou si la Case n'a pas été fouillée  */
     public boolean prendreBoissons(int _qt) {
-        if (this.fouiller) {
+        if (this.fouillee) {
             if (this.nbBoissons - _qt < 0) {
                 System.out.println("Il n'y a que " + this.nbBoissons
-                        + " boisson énergisantes sur cette case");
+                        + " Boissons énergisantes sur cette case...");
                 return false;
             } else {
                 this.nbBoissons -= _qt;
                 return true;
             }
         } else {
-            System.out.println("La case n'a pas encore été fouillée");
+            System.out.println("La case n'a pas encore été fouillée !!!");
             return false;
         }
     }
 
-    /* Attaque un Zombie => retourne TRUE si il a des zombie à attaquer, et 
+    /* Attaque un Zombie => retourne TRUE si il a des zombies à attaquer, et 
     retire un zombie de la Case */
     public boolean attaquerZombie() {
         if (this.nbZombies == 0) {
-            System.out.println("Il n'y a plus de zombies !!!");
+            System.out.println("Il n'y a plus de zombies sur cette case...");
             return false;
         } else {
             this.nbZombies--;
@@ -145,7 +145,7 @@ public class Exterieur extends Case {
         String s = "Case " + super.getX() + "," + super.getY() + " :\n";
         s += "  - Zombies = " + this.nbZombies;
 
-        if (this.fouiller) {
+        if (this.fouillee) {
             s += "\n" + this.getItems();
         }
 
@@ -154,7 +154,7 @@ public class Exterieur extends Case {
 
     /* Retourne les items restants sur la Case sous forme d'une chaîne de 
     caractères */
-    public String getItems() {
+    private String getItems() {
         String s = "  - Items =\n";
         s += "    - Planches de bois x" + this.nbPlanches + "\n";
         s += "    - Plaques de métal x" + this.nbMetal + "\n";
@@ -163,21 +163,24 @@ public class Exterieur extends Case {
         return s;
     }
 
+    /* Retourne le nombre de Planches sur la Case */
     public int getNbPlanches() {
         return this.nbPlanches;
     }
 
+    /* Retourne le nombre de Metal sur la Case */
     public int getNbMetal() {
         return this.nbMetal;
     }
 
+    /* Retourne le nombre de Boissons sur la Case */
     public int getNbBoissons() {
         return this.nbBoissons;
     }
 
-    /* Retourne vrai si la case est fouillée */
-    public boolean isFouiller() {
-        return this.fouiller;
+    /* Retourne TRUE si la Case est fouillée */
+    public boolean isFouillee() {
+        return this.fouillee;
     }
     
     

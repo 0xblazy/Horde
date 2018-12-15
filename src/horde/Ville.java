@@ -13,11 +13,11 @@ import java.util.ArrayList;
  */
 public class Ville extends Case {
 
-    /* Booléen qui définit si la porte est ouerte ou non => FAUX par défaut */
+    /* Booléen qui définit si la porte est ouverte ou non => FAUX par défaut */
     private boolean porteOuverte;
     /* Entrepôt */
-    private int nbPlanches, nbMetal, nbBoissons, nbRations;
-    /* Liste des défenses */
+    private int nbPlanches,nbMetal,nbBoissons,nbRations;
+    /* Liste des Defense */
     private ArrayList<Defense> defenses;
     
     /* Constructeur */
@@ -62,7 +62,7 @@ public class Ville extends Case {
     ration dans l'entrepôt */
     public boolean prendreRation(){
         if(this.nbRations == 0) {
-            System.out.println("Il n'y a plus de ration dans l'entrepôt");
+            System.out.println("Il n'y a plus de ration dans l'entrepôt...");
             return false;
         } else {
             this.nbRations--;
@@ -70,17 +70,17 @@ public class Ville extends Case {
         }
     }
     
-    /* Dépose des planches dans l'entrepot */
+    /* Dépose des planches dans l'entrepôt */
     public void deposerPlanches(int _qt) {
         this.nbPlanches += _qt;
     }
     
-    /* Dépose du métal dans l'entrepot */
+    /* Dépose du métal dans l'entrepôt */
     public void deposerMetal(int _qt) {
         this.nbMetal += _qt;
     }
     
-    /* Dépose des boissons dans l'entrepot */
+    /* Dépose des boissons dans l'entrepôt */
     public void deposerBoissons(int _qt) {
         this.nbBoissons += _qt;
     }
@@ -92,8 +92,8 @@ public class Ville extends Case {
     
     /* Construit une nouvelle défense */
     public boolean nouvelleDefense(int _id){
-        if (Defense.Defenses.values()[_id].nbPlanches < this.nbPlanches 
-                && Defense.Defenses.values()[_id].nbMetal < this.nbMetal) {
+        if (Defense.Defenses.values()[_id].nbPlanches <= this.nbPlanches 
+                && Defense.Defenses.values()[_id].nbMetal <= this.nbMetal) {
             this.nbPlanches -= Defense.Defenses.values()[_id].nbPlanches;
             this.nbMetal -= Defense.Defenses.values()[_id].nbMetal;
             
@@ -101,37 +101,14 @@ public class Ville extends Case {
             this.defenses.get(this.defenses.size() - 1).contruire(1);
             return true;
         } else {
-            System.out.println("Pas assez de ressources dans l'entrepôt !");
+            System.out.println("Il n'y a pas assez de ressources dans "
+                    + "l'entrepôt !!!");
             return false;
         }
     }
     
-    /* Retourne la case Ville sous la forme Ville : Porte OUVERTE/FERMÉE 
-    Entrepot */
-    public String toString() {
-        String s = "Ville (résiste à " + this.defenses() + " zombies) :\n";
-        s += "  Porte ";
-        if(this.porteOuverte) {
-            s += "OUVERTE\n";
-        } else {
-            s += "FERMÉE\n";
-        }
-        s += "  Entrepot :\n";
-        s += "    - Planches de bois : " + this.nbPlanches + "\n";
-        s += "    - Plaques de métal : " + this.nbMetal + "\n";
-        s += "    - Boissons énergisantes : " + this.nbBoissons + "\n";
-        s += "    - Rations : " + this.nbRations;
-        
-        return s;
-    }
-    
-    /* Retourne VRAI si la porte est ouverte */
-    public boolean porteOuverte(){
-        return this.porteOuverte;
-    }
-    
-    /* Retourne le nombre de zombie auquel la ville peut résister (20 + la 
-    défense des Contructions) */
+    /* Retourne le nombre de zombie auquel la ville peut résister (20 + 
+    Défenses) */
     public int defenses() {
         int def = 20;
         
@@ -144,7 +121,8 @@ public class Ville extends Case {
         return def;
     }
     
-    /* Retourne la liste des Defense sous forme d'une chaîne de caractère */
+    /* Retourne la liste des Defense sous forme d'une chaîne de caractère, 
+    destinée à être affichée dans le menu des défenses */
     public String listDef() {
         String s = "=== DEFENSES ===\n";
         
@@ -163,4 +141,29 @@ public class Ville extends Case {
     public int nbDef() {
         return this.defenses.size();
     }
+    
+    /* Retourne la case Ville sous la forme Ville : Porte OUVERTE/FERMÉE 
+    Entrepot */
+    public String toString() {
+        String s = "Ville (résiste à " + this.defenses() + " zombies) :\n";
+        s += "  Porte ";
+        if(this.porteOuverte) {
+            s += "OUVERTE\n";
+        } else {
+            s += "FERMÉE\n";
+        }
+        s += "  Entrepôt :\n";
+        s += "    - Planches de bois : " + this.nbPlanches + "\n";
+        s += "    - Plaques de métal : " + this.nbMetal + "\n";
+        s += "    - Boissons énergisantes : " + this.nbBoissons + "\n";
+        s += "    - Rations : " + this.nbRations;
+        
+        return s;
+    }
+    
+    /* Retourne VRAI si la porte est ouverte */
+    public boolean porteOuverte(){
+        return this.porteOuverte;
+    }
+
 }
